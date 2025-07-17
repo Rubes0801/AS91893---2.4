@@ -41,18 +41,27 @@ def home():
     # Get all data from the Species table
     cursor.execute("SELECT * FROM Species")
     species_results = cursor.fetchall()
-    
+
     # Get all data from the Origin_Status table
     cursor.execute("SELECT * FROM Origin_Status")
     origin_status_results = cursor.fetchall()
-    
+
     # Get all data from the Species_Type table
     cursor.execute("SELECT * FROM Species_Type")
     species_type_results = cursor.fetchall()
-    
+
     # Get all data from the Status table
     cursor.execute("SELECT * FROM Status")
     status_results = cursor.fetchall()
+
+    # Debug: Print what we have
+    print("First species record:", species_results[0] if species_results else "No species")
+    print("Status table:", status_results)
+    print("Species status values:", [row[7] for row in species_results[:3]] if species_results else "No species")
+
+    # Create a status lookup dictionary
+    status_dict = {row[0]: row[1] for row in status_results}
+    print("Status dictionary:", status_dict)
     
     cursor.close()
     
@@ -70,14 +79,15 @@ def home():
     }
     
     return render_template(
-        "index.html", 
-        species=species_results,
-        origin_status=origin_status_results,
-        species_type=species_type_results,
-        status=status_results,
-        selected_field=selected_field,
-        field_indices=field_indices
-    )
+    "index.html", 
+    species=species_results,
+    origin_status=origin_status_results,
+    species_type=species_type_results,
+    status=status_results,
+    status_dict=status_dict,
+    selected_field=selected_field,
+    field_indices=field_indices
+)
 
 
 @app.route("/species")

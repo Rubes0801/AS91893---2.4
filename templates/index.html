@@ -43,7 +43,7 @@
                 </div>
                 <div class="species-card-detail">
                     <span class="species-card-label">Status:</span>
-                    <span class="species-card-value">{{ item[7] }}</span>
+                    <span class="species-card-value">{{ status_dict.get(item[7]) }}</span>
                 </div>
                 <div class="species-card-detail">
                     <span class="species-card-label">Family:</span>
@@ -87,18 +87,5 @@
         {% endfor %}
     </table>
 
-    <h2>Status</h2>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Status</th>
-        </tr>
-        {% for item in status %}
-        <tr>
-            <td>{{ item[0] }}</td>
-            <td>{{ item[1] }}</td>
-        </tr>
-        {% endfor %}
-    </table>
 </body>
 </html>
