@@ -1,0 +1,143 @@
+/* Wildlife Theme CSS Variables from styles.css */
+:root {
+  --primary-color: #2e7d32; /* Forest green */
+  --secondary-color: #1b5e20; /* Darker green */
+  --accent-color: #8bc34a; /* Light green */
+  --background-color: #f1f8e9; /* Light beige/green */
+  --table-header-bg: #43a047; /* Medium green */
+  --table-even-row: #e8f5e9; /* Very light green */
+  --table-odd-row: #ffffff; /* White */
+  --table-border: #81c784; /* Light green border */
+  --text-color: #33691e; /* Dark green text */
+  --heading-color: #33691e; /* Dark green headings */
+  --link-color: #1b5e20; /* Dark green links */
+}
+
+* {box-sizing: border-box}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 0;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Add padding to containers */
+.container {
+  padding: 20px;
+  background-color: var(--table-even-row);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+}
+
+/* Labels styling to match the wildlife theme */
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: 1px solid var(--table-border);
+  background: white;
+  border-radius: 4px;
+  font-size: 16px;
+  color: var(--text-color);
+  transition: border-color 0.3s;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: white;
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* Overwrite default styles of hr */
+hr {
+  border: none;
+  border-bottom: 3px solid var(--accent-color);
+  margin-bottom: 25px;
+}
+
+/* Set a style for the submit/register button */
+.registerbtn {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  opacity: 1;
+}
+
+.registerbtn:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Style for headings */
+h1 {
+  color: var(--heading-color);
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  border-bottom: 3px solid var(--accent-color);
+  padding-bottom: 10px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Add proper link styling */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+/* Set styling for the "sign in" section */
+.signin {
+  background-color: var(--table-even-row);
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Placeholder text color */
+::placeholder {
+  color: #999;
+  opacity: 1;
+}
+
+/* Style for paragraphs */
+p {
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+/* Additional styling for better consistency */
+b {
+  color: var(--heading-color);
+  font-weight: bold;
+}

@@ -1,0 +1,145 @@
+/* Wildlife Theme CSS Variables from styles.css */
+:root {
+  --primary-color: #2e7d32; /* Forest green */
+  --secondary-color: #1b5e20; /* Darker green */
+  --accent-color: #8bc34a; /* Light green */
+  --background-color: #f1f8e9; /* Light beige/green */
+  --table-header-bg: #43a047; /* Medium green */
+  --table-even-row: #e8f5e9; /* Very light green */
+  --table-odd-row: #ffffff; /* White */
+  --table-border: #81c784; /* Light green border */
+  --text-color: #33691e; /* Dark green text */
+  --heading-color: #33691e; /* Dark green headings */
+  --link-color: #1b5e20; /* Dark green links */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Updated to match styles.css */
+  background-color: var(--background-color); /* Using wildlife theme background */
+  color: var(--text-color); /* Using wildlife theme text color */
+  height: 100vh;
+  overflow: hidden;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  width: 500px;
+  height: 400px;
+  background: var(--table-even-row); /* Using wildlife theme light green for form background */
+  border-radius: 8px; /* Increased border radius to match styles.css */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Added box shadow to match styles.css */
+}
+
+.center h1 {
+  text-align: center;
+  padding: 20px 0; /* Increased padding */
+  border-bottom: 3px solid var(--accent-color); /* Using accent color from wildlife theme */
+  color: var(--heading-color); /* Using heading color from wildlife theme */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Added text shadow to match styles.css */
+  margin: 0;
+  font-size: 2rem; /* Added font size for consistency */
+}
+
+.center form {
+  padding: 0 60px;
+  box-sizing: border-box;
+}
+
+form .txt_field {
+  position: relative;
+  border-bottom: 2px solid var(--table-border); /* Using table border color */
+  margin: 30px 0;
+}
+
+.txt_field input {
+  width: 100%;
+  padding: 0 5px;
+  height: 40px;
+  font-size: 16px;
+  border: none;
+  background: none;
+  outline: none;
+  color: var(--text-color); /* Using wildlife theme text color */
+}
+
+.txt_field label {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  color: var(--text-color); /* Using wildlife theme text color */
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+  transition: .5s;
+}
+
+.txt_field span::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--primary-color); /* Using primary color from wildlife theme */
+}
+
+.txt_field input:focus ~ label,
+.txt_field input:valid ~ label {
+  top: -5px;
+  color: var(--primary-color); /* Using primary color from wildlife theme */
+}
+
+.forgot {
+  margin: -5px 0 20px 5px;
+  color: var(--text-color); /* Using wildlife theme text color */
+  cursor: pointer;
+  font-weight: bold; /* Added bold to match link styling */
+  transition: color 0.3s; /* Added transition to match styles.css */
+}
+
+.forgot:hover {
+  text-decoration: underline;
+  color: var(--primary-color); /* Using primary color on hover */
+}
+
+button[type="submit"] {
+  width: 100%;
+  height: 50px;
+  border: none; /* Removed border to match button styling */
+  background-color: var(--primary-color); /* Using primary color from wildlife theme */
+  border-radius: 4px; /* Using same border radius as buttons in styles.css */
+  font-size: 16px;
+  color: white; /* Using white text on buttons */
+  font-weight: bold; /* Modified to bold instead of 700 */
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s; /* Added transition to match styles.css */
+}
+
+button[type="submit"]:hover {
+  background-color: var(--secondary-color); /* Using secondary color on hover */
+}
+
+.users_signup {
+  margin: 30px 0;
+  text-align: center;
+  font-size: 16px;
+  color: var(--text-color); /* Using wildlife theme text color */
+}
+
+.users_signup a {
+  color: var(--link-color); /* Using link color from wildlife theme */
+  text-decoration: none;
+  font-weight: bold; /* Added bold to match link styling */
+  transition: color 0.3s; /* Added transition to match styles.css */
+}
+
+.users_signup a:hover {
+  color: var(--primary-color); /* Using primary color on hover */
+  text-decoration: underline;
+}

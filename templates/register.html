@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/css/register.css">
+    <title> Register with NZ Wildlife </title>
+</head>
+
+<!--Text at the top of the page-->
+  <div class="container">
+    <h1>Register</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+    <p>Please fill in this form to create an account.</p>
+  
+
+<!--Input fields for users to register-->
+<form method="post" action="/register">
+    <hr>
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="email" id="email" required maxlength="100">
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" id="psw" required maxlength="50" minlength="8">
+
+    <label for="psw-repeat"><b>Repeat Password</b></label>
+    <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required maxlength="50" minlength="8">
+    <hr>
+    <button type="submit" class="registerbtn">Register</button>
+  </div>
+</form>
+
+<!--Link to sign in page-->
+  <div class="container signin">
+    <p>Registered or already have an account? <a href="/login">Login</a> to proceed</p>
+  </div>
+</form>

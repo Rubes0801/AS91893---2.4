@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Search Results - NZ Wildlife</title>
+</head>
+<body>
+    <!--Sign in and Register links-->
+    <div class="container signin">
+    <a href="/login">Login</a> or <a href="/register">Register</a>
+    </div>
+
+    <!--Link back to home page-->
+    <h1>Search Results</h1>
+    <a href="/" class="back-link">← Back to Home</a>
+
+<form method="GET" action="/species">
+    <div class="search-container">
+        <div class="search-wrapper">
+            <input type="text" 
+                   name="name" 
+                   class="search-input" 
+                   id="searchInput"
+                   placeholder="Search..." 
+                   value="{{ search_query or '' }}"
+                   autocomplete="off">
+            <div id="searchDropdown" class="search-dropdown"></div>
+        </div>
+        <button type="submit">Search</button>
+    </div>
+</form>
+
+    {% if search_query %}
+        <h2>Results for: "{{ search_query }}"</h2>
+        {% if species %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Species Name</th>
+                        <th>Matched Field</th>
+                        <th>Field Value</th>
+                        <th>Image</th>
+                    </tr>
+                </thead>
+                <!--Searches for data stored inside the database with the SQL query-->
+                <tbody>
+                    {% for item in species %}
+                    <tr class="species-row" data-name="{{ item[1] }}">
+                        <td>{{ item[1] }}</td>
+                        <td>{{ item[11] }}</td>
+                        <td>
+                            {% if item[11] == 'Species Name' %}{{ item[1] }}
+                            {% elif item[11] == 'Scientific Name' %}{{ item[2] }}
+                            {% elif item[11] == 'Species Type' %}{{ item[3] }}
+                            {% elif item[11] == 'Origin Status' %}{{ item[4] }}
+                            {% elif item[11] == 'Predator' %}{{ item[5] }}
+                            {% elif item[11] == 'Prey' %}{{ item[6] }}
+                            {% elif item[11] == 'Status' %}{{ item[7] }}
+                            {% elif item[11] == 'Family' %}{{ item[8] }}
+                            {% elif item[11] == 'Numbers' %}{{ item[9] }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item[10] %}
+                                <img src="{{ item[10] }}" alt="{{ item[1] }}" width="150">
+                            {% else %}
+                                No image available
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <!--If user searches for something that isn't stored in the database, the page will return "No results"-->
+        {% else %}
+            <p id="no-results">No results found for "{{ search_query }}"</p>
+        {% endif %}
+    {% else %}
+        <p>Please enter a search term to find species.</p>
+    {% endif %}
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchDropdown = document.getElementById('searchDropdown');
+    let currentTimeout;
+    let currentHighlight = -1;
+
+    // Function to fetch search suggestions
+    function fetchSuggestions(query) {
+        if (query.length < 2) {
+            hideDropdown();
+            return;
+        }
+
+        // Clear previous timeout
+        if (currentTimeout) {
+            clearTimeout(currentTimeout);
+        }
+
+        // Show loading
+        showLoading();
+
+        // Debounce the API call
+        currentTimeout = setTimeout(() => {
+            fetch(`/api/search-suggestions?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    showSuggestions(data.suggestions);
+                })
+                .catch(error => {
+                    console.error('Error fetching suggestions:', error);
+                    hideDropdown();
+                });
+        }, 300);
+    }
+
+// Show loading state
+    function showLoading() {
+        searchDropdown.innerHTML = '<div class="dropdown-loading">Searching...</div>';
+        searchDropdown.classList.add('show');
+    }
+
+    // Show suggestions in dropdown
+    function showSuggestions(suggestions) {
+        if (suggestions.length === 0) {
+            hideDropdown();
+            return;
+        }
+
+        const html = suggestions.map((suggestion, index) => `
+            <div class="dropdown-item" data-index="${index}" data-text="${suggestion.text}">
+                <div class="dropdown-item-text">${suggestion.text}</div>
+                <div class="dropdown-item-type">${suggestion.type}</div>
+            </div>
+        `).join('');
+
+        searchDropdown.innerHTML = html;
+        searchDropdown.classList.add('show');
+        currentHighlight = -1;
+
+        searchDropdown.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', function() {
+                selectSuggestion(this.dataset.text);
+            });
+        });
+    }
+
+    // Hide dropdown
+    function hideDropdown() {
+        searchDropdown.classList.remove('show');
+        currentHighlight = -1;
+    }
+
+    // Select a suggestion
+    function selectSuggestion(text) {
+        searchInput.value = text;
+        hideDropdown();
+        searchInput.form.submit();
+    }
+
+    // Handle keyboard navigation
+    function handleKeyNavigation(e) {
+        const items = searchDropdown.querySelectorAll('.dropdown-item');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            currentHighlight = Math.min(currentHighlight + 1, items.length - 1);
+            updateHighlight(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            currentHighlight = Math.max(currentHighlight - 1, -1);
+            updateHighlight(items);
+        } else if (e.key === 'Enter') {
+            if (currentHighlight >= 0 && items[currentHighlight]) {
+                e.preventDefault();
+                selectSuggestion(items[currentHighlight].dataset.text);
+            }
+        } else if (e.key === 'Escape') {
+            hideDropdown();
+        }
+    }
+
+    // Update visual highlight
+    function updateHighlight(items) {
+        items.forEach((item, index) => {
+            item.classList.toggle('highlighted', index === currentHighlight);
+        });
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', function() {
+        fetchSuggestions(this.value.trim());
+    });
+
+    searchInput.addEventListener('focus', function() {
+        if (this.value.trim().length >= 2) {
+            fetchSuggestions(this.value.trim());
+        }
+    });
+
+    searchInput.addEventListener('keydown', handleKeyNavigation);
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+            hideDropdown();
+        }
+    });
+});
+</script>
+</body>
+</html>
