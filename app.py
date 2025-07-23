@@ -38,19 +38,8 @@ def home():
     # Get the selected field from the query parameter
     selected_field = request.args.get('field', default=None)
     
-    # Get all data from the Species table with descriptive names
-    cursor.execute("""
-        SELECT s.species_id, s.species_name, s.scientific_name, 
-               st.species_type, os.origin_status, s.predator, s.prey,
-               stat.status, s.family, s.numbers, s.image_path
-        FROM Species s
-        LEFT JOIN Species_Type st ON s.species_type = st.id
-        LEFT JOIN Origin_Status os ON s.origin_status = os.id  
-        LEFT JOIN Status stat ON s.status = stat.id
-        """)
-    
-    
-
+    # Get all data from the Species table
+    cursor.execute("SELECT * FROM Species")
     species_results = cursor.fetchall()
 
     # Get all data from the Origin_Status table
@@ -60,6 +49,19 @@ def home():
     # Get all data from the Species_Type table
     cursor.execute("SELECT * FROM Species_Type")
     species_type_results = cursor.fetchall()
+
+    # Get all data from the Status table
+    cursor.execute("SELECT * FROM Status")
+    status_results = cursor.fetchall()
+
+    # Debug: Print what we have
+    print("First species record:", species_results[0] if species_results else "No species")
+    print("Status table:", status_results)
+    print("Species status values:", [row[7] for row in species_results[:3]] if species_results else "No species")
+
+    # Create a status lookup dictionary
+    status_dict = {row[0]: row[1] for row in status_results}
+    print("Status dictionary:", status_dict)
     
     cursor.close()
     
@@ -81,6 +83,8 @@ def home():
     species=species_results,
     origin_status=origin_status_results,
     species_type=species_type_results,
+    status=status_results,
+    status_dict=status_dict,
     selected_field=selected_field,
     field_indices=field_indices
 )
@@ -94,51 +98,32 @@ def species():
     if search_query:
         # Search across all relevant fields
         cursor.execute("""
-SELECT s.species_id, s.species_name, s.scientific_name, 
-       st.species_type, os.origin_status, s.predator, s.prey,
-       stat.status, s.family, s.numbers, s.image_path,
-       CASE 
-           WHEN LOWER(s.species_name) LIKE ? THEN 'Species Name'
-           WHEN LOWER(s.scientific_name) LIKE ? THEN 'Scientific Name'
-           WHEN LOWER(st.species_type) LIKE ? THEN 'Species Type'
-           WHEN LOWER(os.origin_status) LIKE ? THEN 'Origin Status'
-           WHEN LOWER(s.predator) LIKE ? THEN 'Predator'
-           WHEN LOWER(s.prey) LIKE ? THEN 'Prey'
-           WHEN LOWER(stat.status) LIKE ? THEN 'Status'
-           WHEN LOWER(s.family) LIKE ? THEN 'Family'
-           WHEN LOWER(s.numbers) LIKE ? THEN 'Numbers'
-       END as matched_field
-FROM Species s
-LEFT JOIN Species_Type st ON s.species_type = st.id
-LEFT JOIN Origin_Status os ON s.origin_status = os.id  
-LEFT JOIN Status stat ON s.status = stat.id
-WHERE LOWER(s.species_name) LIKE ?
-   OR LOWER(s.scientific_name) LIKE ?
-   OR LOWER(st.species_type) LIKE ?
-   OR LOWER(os.origin_status) LIKE ?
-   OR LOWER(s.predator) LIKE ?
-   OR LOWER(s.prey) LIKE ?
-   OR LOWER(stat.status) LIKE ?
-   OR LOWER(s.family) LIKE ?
-   OR LOWER(s.numbers) LIKE ?
-""", ['%' + search_query + '%'] * 18)  # 9 for CASE + 9 for WHERE
+            SELECT DISTINCT s.*, 
+                   CASE 
+                       WHEN LOWER(s.species_name) LIKE ? THEN 'Species Name'
+                       WHEN LOWER(s.scientific_name) LIKE ? THEN 'Scientific Name'
+                       WHEN LOWER(s.species_type) LIKE ? THEN 'Species Type'
+                       WHEN LOWER(s.origin_status) LIKE ? THEN 'Origin Status'
+                       WHEN LOWER(s.predator) LIKE ? THEN 'Predator'
+                       WHEN LOWER(s.prey) LIKE ? THEN 'Prey'
+                       WHEN LOWER(s.status) LIKE ? THEN 'Status'
+                       WHEN LOWER(s.family) LIKE ? THEN 'Family'
+                       WHEN LOWER(s.numbers) LIKE ? THEN 'Numbers'
+                   END as matched_field
+            FROM species s
+            WHERE LOWER(s.species_name) LIKE ?
+               OR LOWER(s.scientific_name) LIKE ?
+               OR LOWER(s.species_type) LIKE ?
+               OR LOWER(s.origin_status) LIKE ?
+               OR LOWER(s.predator) LIKE ?
+               OR LOWER(s.prey) LIKE ?
+               OR LOWER(s.status) LIKE ?
+               OR LOWER(s.family) LIKE ?
+               OR LOWER(s.numbers) LIKE ?
+        """, ['%' + search_query + '%'] * 18)  # 9 for CASE + 9 for WHERE
     else:
-        cursor.execute("""
-            SELECT s.species_id, s.species_name, s.scientific_name, 
-                   st.species_type, os.origin_status, s.predator, s.prey,
-                   stat.status, s.family, s.numbers, s.image_path,
-                   NULL as matched_field 
-            FROM Species s
-            LEFT JOIN Species_Type st ON s.species_type = st.id
-            LEFT JOIN Origin_Status os ON s.origin_status = os.id  
-            LEFT JOIN Status stat ON s.status = stat.id
-            """)
-    
-    
-    # If no search query, display all species
-    
-    
-        
+        # If no search query, display all species
+        cursor.execute("SELECT *, NULL as matched_field FROM species")
     
     results = cursor.fetchall()
     cursor.close()
