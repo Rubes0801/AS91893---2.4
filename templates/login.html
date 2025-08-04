@@ -1,45 +1,74 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8">
-<title> NZ Wildlife Login Page </title>
-<link rel="stylesheet" href="/static/css/login.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>NZ Wildlife Login Page</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 
 <body>
-<div class = "center">
-<h1> Welcome </h1>
+    <!-- Fixed header matching main site -->
+    <header class="top-header">
+        <div class="auth-links">
+            <a href="/" class="auth-link">← Back to Home</a>
+            <a href="/register" class="auth-link">REGISTER</a>
+        </div>
+    </header>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="flash-message {{ category }}">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+    <!-- Main content wrapper -->
+    <main class="main-content">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to access NZ Wildlife data</p>
 
-<!--Makes the fields required before proceeding to the app.py page-->
-<form method="post" action="/login">
-    <div class="txt_field">
-        <input type="text" name="email" id="email" required maxlength="100" minlength="10" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
-        <span></span>
-        <label>Email Address</label>
-    </div>
+                <!-- Flash messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
 
-    <div class="txt_field">
-        <input type="password" name="psw" id="psw" required maxlength="50" minlength="8">
-        <span></span>
-        <label>Password</label>
-    </div>
+                <!-- Login form -->
+                <form method="post" action="/login" class="auth-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" 
+                               name="email" 
+                               id="email" 
+                               class="form-input"
+                               required 
+                               maxlength="100" 
+                               minlength="10" 
+                               pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                               placeholder="Enter your email address">
+                    </div>
 
-<!--Login Button-->
-<button type="submit">Login</button>
+                    <div class="form-group">
+                        <label for="psw" class="form-label">Password</label>
+                        <input type="password" 
+                               name="psw" 
+                               id="psw" 
+                               class="form-input"
+                               required 
+                               maxlength="50" 
+                               minlength="8"
+                               placeholder="Enter your password">
+                    </div>
 
-<div class="users_signup">
-        Don't have an account? <a href="/register">Register</a>
-    </div>
+                    <!-- Login Button -->
+                    <button type="submit" class="auth-button">Sign In</button>
 
-</form>
-</div>
+                    <div class="auth-links-bottom">
+                        <p>Don't have an account? <a href="/register" class="auth-link-inline">Create one here</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

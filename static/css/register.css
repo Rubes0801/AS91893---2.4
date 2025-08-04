@@ -1,16 +1,31 @@
 /* Wildlife Theme CSS Variables from styles.css */
 :root {
-  --primary-color: #2e7d32; /* Forest green */
-  --secondary-color: #1b5e20; /* Darker green */
-  --accent-color: #8bc34a; /* Light green */
-  --background-color: #f1f8e9; /* Light beige/green */
-  --table-header-bg: #43a047; /* Medium green */
-  --table-even-row: #e8f5e9; /* Very light green */
-  --table-odd-row: #ffffff; /* White */
-  --table-border: #81c784; /* Light green border */
-  --text-color: #33691e; /* Dark green text */
-  --heading-color: #33691e; /* Dark green headings */
-  --link-color: #1b5e20; /* Dark green links */
+  /* Dark Wildlife Theme Color Palette */
+  --primary-color: #2d3e2d; /* Dark forest green */
+  --secondary-color: #1a251a; /* Darkest forest */
+  --accent-color: #7fb069; /* Fresh sage green */
+  --accent-light: #a4c49a; /* Light sage */
+  --accent-bright: #5a8a4a; /* Medium forest green */
+  --earth-brown: #4a3c28; /* Rich earth brown */
+  --bark-brown: #2d2520; /* Dark bark brown */
+  --moss-green: #6b7c32; /* Moss green */
+  --stone-gray: #3a4038; /* Dark stone */
+  --background-color: #1e2420; /* Dark background */
+  --background-secondary: #252a26; /* Slightly lighter dark */
+  --card-background: #2a312b; /* Card background */
+  --text-color: #f5f3f0; /* Creamy white text */
+  --text-secondary: #e8e6e3; /* Light cream text */
+  --heading-color: #ffffff; /* Pure white headings */
+  --link-color: #a4c49a; /* Light sage links */
+  --shadow-color: rgba(0, 0, 0, 0.5); /* Darker shadows */
+  --gradient-primary: linear-gradient(135deg, #2d3e2d, #6b7c32);
+  --gradient-accent: linear-gradient(135deg, #7fb069, #a4c49a);
+  --gradient-earth: linear-gradient(135deg, #4a3c28, #3a4038);
+  --glow-color: rgba(127, 176, 105, 0.2); /* Green glow */
+  --table-header-bg: linear-gradient(135deg, #2d3e2d, #4a3c28);
+  --table-even-row: #2a312b; /* Dark even rows */
+  --table-odd-row: #252a26; /* Dark odd rows */
+  --table-border: #3a4038; /* Dark borders */
 }
 
 * {box-sizing: border-box}
@@ -21,18 +36,85 @@ body {
   color: var(--text-color);
   line-height: 1.6;
   margin: 0;
-  padding: 20px;
-  max-width: 800px;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.top-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  background: rgba(30, 36, 32, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 15px 30px;
+  z-index: 1000;
+  border-bottom: 1px solid var(--accent-color);
+}
+
+.auth-links {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Add padding to containers */
+.auth-link {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.auth-link:hover {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+  background: rgba(127, 176, 105, 0.1);
+}
+
 .container {
-  padding: 20px;
-  background-color: var(--table-even-row);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 140px);
+  padding: 120px 20px 40px 20px; /* Top padding for fixed header */
+}
+
+.auth-card {
+  background: linear-gradient(135deg, var(--card-background), rgba(42, 49, 43, 0.95));
+  border-radius: 20px;
+  box-shadow: 
+    0 20px 60px var(--shadow-color),
+    0 8px 25px rgba(0,0,0,0.3);
+  padding: 50px 40px;
+  width: 100%;
+  max-width: 450px;
+  border: 1px solid var(--accent-color);
+  backdrop-filter: blur(15px);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(127, 176, 105, 0.1), transparent);
+  transition: left 1s ease;
+}
+
+.auth-card:hover::before {
+  left: 100%;
 }
 
 /* Labels styling to match the wildlife theme */
@@ -43,24 +125,33 @@ label {
   color: var(--text-color);
 }
 
-/* Full-width input fields */
 input[type=text], input[type=password] {
   width: 100%;
-  padding: 10px;
+  padding: 15px 20px;
   margin: 5px 0 22px 0;
   display: inline-block;
-  border: 1px solid var(--table-border);
-  background: white;
-  border-radius: 4px;
+  border: 2px solid var(--accent-color);
+  border-radius: 12px;
   font-size: 16px;
+  background: rgba(42, 49, 43, 0.8);
   color: var(--text-color);
-  transition: border-color 0.3s;
+  transition: all 0.3s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+input[type=text]::placeholder, input[type=password]::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
 }
 
 input[type=text]:focus, input[type=password]:focus {
-  background-color: white;
-  outline: none;
-  border-color: var(--primary-color);
+  border-color: var(--accent-bright);
+  box-shadow: 
+    0 0 0 3px var(--glow-color),
+    inset 0 2px 8px rgba(0,0,0,0.1);
+  background: rgba(42, 49, 43, 0.95);
+  transform: translateY(-2px);
 }
 
 /* Overwrite default styles of hr */
@@ -70,58 +161,128 @@ hr {
   margin-bottom: 25px;
 }
 
-/* Set a style for the submit/register button */
 .registerbtn {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 16px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
   width: 100%;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.3s;
-  opacity: 1;
+  background: var(--gradient-earth);
+  color: var(--text-color);
+  border: none;
+  padding: 18px 30px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 30px 0 20px 0;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(74, 60, 40, 0.4);
+}
+
+.registerbtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(245, 243, 240, 0.3), transparent);
+  transition: left 0.6s ease;
 }
 
 .registerbtn:hover {
-  background-color: var(--secondary-color);
+  background: linear-gradient(135deg, var(--moss-green), var(--accent-bright));
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(93, 124, 90, 0.5);
 }
 
-/* Style for headings */
+.registerbtn:hover::before {
+  left: 100%;
+}
+
+.registerbtn:active {
+  transform: translateY(-1px);
+}
+
 h1 {
   color: var(--heading-color);
   text-align: center;
   font-size: 2.5rem;
-  margin-bottom: 30px;
-  border-bottom: 3px solid var(--accent-color);
-  padding-bottom: 10px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+  font-weight: 300;
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+  text-transform: lowercase;
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
 }
 
-/* Add proper link styling */
+@supports not (background-clip: text) {
+  h1 {
+    color: var(--heading-color);
+    background: none;
+  }
+}
+
+label {
+  display: block;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 a {
-  color: var(--link-color);
+  color: var(--accent-color);
   text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-accent);
+  transition: width 0.3s ease;
 }
 
 a:hover {
-  color: var(--primary-color);
-  text-decoration: underline;
+  color: var(--accent-bright);
+  transform: translateY(-1px);
 }
 
-/* Set styling for the "sign in" section */
+a:hover::after {
+  width: 100%;
+}
+
+hr {
+  border: none;
+  border-bottom: 2px solid var(--accent-color);
+  margin: 25px 0;
+  opacity: 0.3;
+}
+
 .signin {
-  background-color: var(--table-even-row);
   text-align: center;
-  padding: 20px;
-  border-radius: 8px;
-  margin-top: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(127, 176, 105, 0.2);
+  background: none;
+  box-shadow: none;
+}
+
+.signin p {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.95rem;
 }
 
 /* Placeholder text color */
@@ -140,4 +301,26 @@ p {
 b {
   color: var(--heading-color);
   font-weight: bold;
+}
+
+.flash-message {
+  padding: 15px 20px;
+  margin: 20px 0;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 4px 15px var(--shadow-color);
+  backdrop-filter: blur(10px);
+}
+
+.flash-message.error {
+  background: linear-gradient(135deg, rgba(248, 215, 218, 0.9), rgba(245, 198, 203, 0.9));
+  color: #721c24;
+  border: 2px solid #f5c6cb;
+}
+
+.flash-message.success {
+  background: linear-gradient(135deg, rgba(212, 237, 218, 0.9), rgba(195, 230, 203, 0.9));
+  color: #155724;
+  border: 2px solid #c3e6cb;
 }

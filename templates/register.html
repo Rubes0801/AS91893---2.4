@@ -7,9 +7,19 @@
     <link rel="stylesheet" href="/static/css/register.css">
     <title> Register with NZ Wildlife </title>
 </head>
+<body>
+
+<!-- ADD THIS NEW HEADER -->
+<header class="top-header">
+    <div class="auth-links">
+        <a href="/" class="auth-link">HOME</a>
+        <a href="/login" class="auth-link">LOG IN</a>
+    </div>
+</header>
 
 <!--Text at the top of the page-->
-  <div class="container">
+<div class="container">
+  <div class="auth-card">
     <h1>Register</h1>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -21,26 +31,28 @@
 {% endwith %}
 
     <p>Please fill in this form to create an account.</p>
-  
 
-<!--Input fields for users to register-->
-<form method="post" action="/register">
-    <hr>
-    <label for="email"><b>Email</b></label>
-    <input type="text" placeholder="Enter Email" name="email" id="email" required maxlength="100">
+    <!--Input fields for users to register-->
+    <form method="post" action="/register">
+        <hr>
+        <label for="email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Email" name="email" id="email" required maxlength="100">
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" id="psw" required maxlength="50" minlength="8">
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" id="psw" required maxlength="50" minlength="8">
 
-    <label for="psw-repeat"><b>Repeat Password</b></label>
-    <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required maxlength="50" minlength="8">
-    <hr>
-    <button type="submit" class="registerbtn">Register</button>
+        <label for="psw-repeat"><b>Repeat Password</b></label>
+        <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required maxlength="50" minlength="8">
+        <hr>
+        <button type="submit" class="registerbtn">Register</button>
+    </form>
+
+    <!--Link to sign in page-->
+    <div class="signin">
+        <p>Registered or already have an account? <a href="/login">Login</a> to proceed</p>
+    </div>
   </div>
-</form>
+</div>
 
-<!--Link to sign in page-->
-  <div class="container signin">
-    <p>Registered or already have an account? <a href="/login">Login</a> to proceed</p>
-  </div>
-</form>
+</body>
+</html>
