@@ -57,3 +57,4 @@ pip freeze > requirements.txt
 
 python app.py
 ```
+.venv\scripts\activate
