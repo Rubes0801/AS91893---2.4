@@ -12,8 +12,8 @@
     <!-- Fixed header matching main site -->
     <header class="top-header">
         <div class="auth-links">
-            <a href="/" class="auth-link">← Back to Home</a>
-            <a href="/register" class="auth-link">REGISTER</a>
+            <a href="/" class="auth-link">← Back to Home / Kāinga</a>
+            <a href="/register" class="auth-link">REGISTER / REHITA</a>
         </div>
     </header>
 
@@ -21,8 +21,8 @@
     <main class="main-content">
         <div class="auth-container">
             <div class="auth-card">
-                <h1 class="auth-title">Welcome Back</h1>
-                <p class="auth-subtitle">Sign in to access NZ Wildlife data</p>
+                <h1 class="auth-title">Welcome Back <br> Nau mai hoki mai</h1>
+                <p class="auth-subtitle">Sign in to access NZ Wildlife data <br>Waitohu ki konei</p>
 
                 <!-- Flash messages -->
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -36,7 +36,7 @@
                 <!-- Login form -->
                 <form method="post" action="/login" class="auth-form">
                     <div class="form-group">
-                        <label for="email" class="form-label">Email Address</label>
+                        <label for="email" class="form-label">Email Address / Wāhitau īmēra</label>
                         <input type="email" 
                                name="email" 
                                id="email" 
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="psw" class="form-label">Password</label>
+                        <label for="psw" class="form-label">Password / Kupuhipa</label>
                         <input type="password" 
                                name="psw" 
                                id="psw" 
@@ -61,7 +61,7 @@
                     </div>
 
                     <!-- Login Button -->
-                    <button type="submit" class="auth-button">Sign In</button>
+                    <button type="submit" class="auth-button">Sign In / Takiuru</button>
 
                     <div class="auth-links-bottom">
                         <p>Don't have an account? <a href="/register" class="auth-link-inline">Create one here</a></p>

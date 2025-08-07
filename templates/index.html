@@ -11,27 +11,27 @@
     <!-- Fixed header - ONLY contains auth links -->
     <header class="top-header">
         <div class="auth-links">
-            <a href="/login" class="auth-link">LOG IN</a>
-            <a href="/register" class="auth-link">REGISTER</a>
+            <a href="/login" class="auth-link">LOG IN / TAKIURU</a>
+            <a href="/register" class="auth-link">REGISTER / REHITA</a>
         </div>
     </header>
 
     <!-- Main content - everything else goes here -->
     <main class="main-content">
-        <h1>The NZ Wildlife Program</h1>
+        <h1>The NZ Wildlife Program <br> te kararehe hōtaka NZ</h1>
         
         <!-- Search form -->
         <form action="/species" method="get">
             <div class="search-container">
                 <input type="text" id="search-box" name="name" class="search-input" placeholder="Search...">
-                <button type="submit">Search</button>
+                <button type="submit">Search / mohaha</button>
             </div>
             <br>
             <input type="hidden" name="field" value="species_name">
         </form>
         
 
-        <h2>All Species Data</h2>
+        <h2>All Species Data / Raraunga Katoa</h2>
             
         <div class="species-grid">
             {% for item in species %}
