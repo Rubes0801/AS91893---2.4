@@ -2,7 +2,7 @@
 # about New Zealand's wildlife species and their conservation status
 
 # Import necessary libraries
-from flask import Flask, g, render_template, request, redirect, flash, session
+from flask import Flask, g, render_template, request, redirect, flash, session, jsonify
 import sqlite3
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -262,6 +262,12 @@ def logout():
     session.pop('user_email', None)
     flash('You have been logged out', 'info')
     return redirect('/login')
+
+
+@app.route("/favourites")
+def favourites():
+    """Route for the favourites page"""
+    return render_template("favourites.html")
     
     
 @app.route("/api/search-suggestions")
@@ -301,6 +307,41 @@ def search_suggestions():
             })
     
     return {'suggestions': suggestions[:8]}  # Limit to 8 suggestions
+
+# Add this new route to your app.py file (add it after the existing routes)
+
+@app.route("/api/species")
+def api_species():
+    """API endpoint to get all species data as JSON for favourites functionality"""
+    cursor = get_db().cursor()
+    
+    # Get all species data
+    cursor.execute("SELECT * FROM Species")
+    species_results = cursor.fetchall()
+    
+    # Convert to list of dictionaries for JSON response
+    species_list = []
+    for species in species_results:
+        species_dict = {
+            'id': species[0],
+            'species_name': species[1],
+            'scientific_name': species[2],
+            'species_type': species[3],
+            'origin_status': species[4],
+            'predator': species[5],
+            'prey': species[6],
+            'status': species[7],
+            'family': species[8],
+            'numbers': species[9],
+            'image_url': species[10] if len(species) > 10 and species[10] else None
+        }
+        species_list.append(species_dict)
+    
+    cursor.close()
+    
+    # Return JSON response
+    from flask import jsonify
+    return jsonify(species_list)
 
 def init_db():
     cursor = get_db().cursor()

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <title>Favourites - NZ Wildlife</title>
+    <style>
+        .star-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .star-button:hover {
+            background: rgba(255, 215, 0, 0.9);
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .star-button.favourited {
+            background: rgba(255, 215, 0, 0.9);
+            color: #fff;
+        }
+
+        .star-button.favourited:hover {
+            background: rgba(255, 215, 0, 1);
+        }
+
+        .star-icon {
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .star-button.favourited .star-icon {
+            color: #fff;
+        }
+
+        .no-favourites {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, var(--card-background), rgba(42, 49, 43, 0.95));
+            border-radius: 20px;
+            border: 2px dashed var(--accent-color);
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .no-favourites h3 {
+            color: var(--heading-color);
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+
+        .no-favourites p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .browse-link {
+            display: inline-block;
+            background: var(--gradient-earth);
+            color: var(--text-color);
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(74, 60, 40, 0.3);
+        }
+
+        .browse-link:hover {
+            background: linear-gradient(135deg, var(--moss-green), var(--accent-color));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(93, 124, 90, 0.4);
+        }
+
+        .favourites-count {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .species-card {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed header with navigation -->
+    <header class="top-header">
+        <div class="auth-links">
+            <a href="/" class="auth-link">HOME / KĀINGA</a>
+            <a href="/favourites" class="auth-link active">FAVOURITES / MAKAU</a>
+            <a href="/login" class="auth-link">LOG IN / TAKIURU</a>
+            <a href="/register" class="auth-link">REGISTER / REHITA</a>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="main-content">
+        <h1>My Favourites <br> aku makau</h1>
+        
+        <div id="favourites-count" class="favourites-count">
+            <!-- Count will be updated by JavaScript -->
+        </div>
+
+        <div id="favourites-container">
+            <!-- Favourited species cards will be inserted here by JavaScript -->
+        </div>
+
+        <div id="no-favourites" class="no-favourites" style="display: none;">
+            <h3>No Favourites Chosen</h3>
+            <p>You haven't added any species to your favourites yet.<br>
+               Explore our wildlife collection and click the star button to save your favourite species!</p>
+            <a href="/" class="browse-link">Browse Species</a>
+        </div>
+    </main>
+
+    <script>
+        // This will store species data fetched from your Flask backend
+        let allSpeciesData = [];
+
+        // Function to get favourites from localStorage
+        function getFavourites() {
+            const favourites = localStorage.getItem('wildlife_favourites');
+            return favourites ? JSON.parse(favourites) : [];
+        }
+
+        // Function to update favourites count display
+        function updateFavouritesCount() {
+            const favourites = getFavourites();
+            const countElement = document.getElementById('favourites-count');
+            const count = favourites.length;
+            
+            if (count === 0) {
+                countElement.textContent = '';
+            } else if (count === 1) {
+                countElement.textContent = '1 species in your favourites';
+            } else {
+                countElement.textContent = `${count} species in your favourites`;
+            }
+        }
+
+        // Function to create a species card
+        function createSpeciesCard(species) {
+            const imageUrl = species.image_url || `https://via.placeholder.com/400x300/4a3c28/f5f3f0?text=${encodeURIComponent(species.species_name)}`;
+            
+            return `
+                <div class="species-card">
+                    <button class="star-button favourited" onclick="toggleFavourite(${species.id})">
+                        <span class="star-icon">★</span>
+                    </button>
+                    <img src="${imageUrl}" alt="${species.species_name} image" class="species-card-image">
+                    <div class="species-card-content">
+                        <div class="species-card-title">${species.species_name}</div>
+                        <div class="species-card-subtitle">${species.scientific_name}</div>
+                        <div class="species-card-details">
+                            <div class="species-card-detail">
+                                <span class="species-card-label">Type:</span>
+                                <span class="species-card-value">${species.species_type}</span>
+                            </div>
+                            <div class="species-card-detail">
+                                <span class="species-card-label">Status:</span>
+                                <span class="species-card-value">${species.status}</span>
+                            </div>
+                            <div class="species-card-detail">
+                                <span class="species-card-label">Family:</span>
+                                <span class="species-card-value">${species.family}</span>
+                            </div>
+                            <div class="species-card-detail">
+                                <span class="species-card-label">Numbers:</span>
+                                <span class="species-card-value">${species.numbers}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to toggle favourite status
+        function toggleFavourite(speciesId) {
+            let favourites = getFavourites();
+            const index = favourites.indexOf(speciesId);
+            
+            if (index > -1) {
+                // Remove from favourites
+                favourites.splice(index, 1);
+                localStorage.setItem('wildlife_favourites', JSON.stringify(favourites));
+                displayFavourites(); // Refresh the display
+            }
+        }
+
+        // Function to fetch species data from your Flask backend
+        async function fetchSpeciesData() {
+            try {
+                const response = await fetch('/api/species');
+                if (response.ok) {
+                    allSpeciesData = await response.json();
+                } else {
+                    console.error('Failed to fetch species data');
+                    allSpeciesData = [];
+                }
+            } catch (error) {
+                console.error('Error fetching species data:', error);
+                allSpeciesData = [];
+            }
+        }
+
+        // Function to display favourites
+        async function displayFavourites() {
+            await fetchSpeciesData(); // Ensure we have the species data
+            
+            const favourites = getFavourites();
+            const container = document.getElementById('favourites-container');
+            const noFavourites = document.getElementById('no-favourites');
+            
+            updateFavouritesCount();
+            
+            if (favourites.length === 0) {
+                container.innerHTML = '';
+                container.style.display = 'none';
+                noFavourites.style.display = 'block';
+            } else {
+                noFavourites.style.display = 'none';
+                container.style.display = 'block';
+                
+                // Create grid container
+                container.innerHTML = '<div class="species-grid" id="favourites-grid"></div>';
+                const grid = document.getElementById('favourites-grid');
+                
+                // Get favourited species data and create cards
+                const favouritedSpecies = allSpeciesData.filter(species => favourites.includes(species.id));
+                
+                favouritedSpecies.forEach(species => {
+                    grid.innerHTML += createSpeciesCard(species);
+                });
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            displayFavourites();
+            
+            // Add active state styling for navigation
+            const style = document.createElement('style');
+            style.textContent = `
+                .auth-link.active {
+                    background: rgba(127, 176, 105, 0.2);
+                    border-color: var(--accent-color);
+                    color: var(--accent-color);
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
