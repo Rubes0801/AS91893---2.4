@@ -1026,3 +1026,242 @@ select:focus,
         .species-card {
             position: relative;
         }
+
+        /* Interactive Map Styling */
+.map-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+    background: var(--card-background);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 
+        0 8px 32px var(--shadow-color),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--accent-color);
+}
+
+.nz-map {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 4px 15px var(--shadow-color));
+    transition: all 0.3s ease;
+}
+
+.map-button {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--gradient-earth);
+    border: 3px solid var(--accent-color);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--text-color);
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(74, 60, 40, 0.4);
+    z-index: 10;
+}
+
+.map-button::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.map-button:hover {
+    transform: scale(1.2);
+    background: var(--gradient-accent);
+    box-shadow: 
+        0 8px 25px rgba(127, 176, 105, 0.6),
+        0 0 0 8px var(--glow-color);
+    border-color: var(--accent-bright);
+}
+
+.map-button:hover::before {
+    opacity: 1;
+}
+
+.map-button:active {
+    transform: scale(1.1);
+}
+
+/* Location Info Panel */
+.location-info {
+    position: absolute;
+    background: linear-gradient(135deg, var(--card-background), rgba(42, 49, 43, 0.98));
+    border-radius: 16px;
+    padding: 25px;
+    min-width: 300px;
+    max-width: 400px;
+    box-shadow: 
+        0 20px 60px var(--shadow-color),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--accent-color);
+    backdrop-filter: blur(15px);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px) scale(0.9);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+}
+
+.location-info.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.location-info::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid var(--accent-color);
+}
+
+.location-title {
+    color: var(--heading-color);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+
+@supports not (background-clip: text) {
+    .location-title {
+        color: var(--heading-color);
+        background: none;
+    }
+}
+
+.location-description {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.species-highlight {
+    background: rgba(127, 176, 105, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid var(--accent-color);
+    margin-top: 15px;
+}
+
+.species-highlight h4 {
+    color: var(--accent-color);
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.species-highlight p {
+    color: var(--text-color);
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-button:hover {
+    background: var(--accent-color);
+    transform: scale(1.1);
+}
+
+/* Map button positioning classes - you can use these for easy positioning */
+.btn-auckland { top: 15%; left: 60%; }
+.btn-wellington { top: 65%; left: 55%; }
+.btn-christchurch { top: 75%; left: 50%; }
+.btn-dunedin { top: 88%; left: 45%; }
+.btn-rotorua { top: 35%; left: 62%; }
+.btn-queenstown { top: 85%; left: 35%; }
+.btn-nelson { top: 55%; left: 48%; }
+.btn-napier { top: 50%; left: 70%; }
+
+/* Responsive adjustments for map */
+@media (max-width: 768px) {
+    .map-container {
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .map-button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .location-info {
+        min-width: 250px;
+        max-width: 300px;
+        padding: 20px;
+        left: 10px !important;
+        right: 10px !important;
+        transform: translateX(0) translateY(-20px) scale(0.9);
+    }
+    
+    .location-info.show {
+        transform: translateX(0) translateY(0) scale(1);
+    }
+    
+    .location-title {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .map-button {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+    
+    .location-info {
+        min-width: 200px;
+        padding: 15px;
+    }
+}

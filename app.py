@@ -343,6 +343,11 @@ def api_species():
     from flask import jsonify
     return jsonify(species_list)
 
+@app.route("/map")
+def map_page():
+    """Route for the interactive map page"""
+    return render_template("map.html")
+
 def init_db():
     cursor = get_db().cursor()
     cursor.execute('''

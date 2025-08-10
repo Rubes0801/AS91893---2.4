@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <title>NZ Wildlife Map</title>
+</head>
+<body>
+    <!-- Fixed header -->
+    <header class="top-header">
+        <div class="auth-links">
+            <a href="/" class="auth-link">HOME / KĀINGA</a>
+            <a href="/favourites" class="auth-link">FAVOURITES / MAKAU</a>
+            <a href="/map" class="auth-link active">MAP / MAPI</a>
+            <a href="/login" class="auth-link">LOG IN / TAKIURU</a>
+            <a href="/register" class="auth-link">REGISTER / REHITA</a>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="main-content">
+        <h1>Wildlife Distribution Map <br> mapi tohatoha kararehe</h1>
+        
+        <div class="map-container">
+            <!-- New Zealand Map -->
+            <img src="/static/images/NZ_Map.svg" alt="New Zealand Map" class="nz-map">
+            
+            <!-- Interactive Buttons - YOU CAN EDIT THESE POSITIONS AND CONTENT -->
+            
+            <!-- Auckland Button -->
+            <button class="map-button btn-auckland" onclick="showLocationInfo('auckland')" data-location="auckland">
+                🏙️
+            </button>
+            
+            <!-- Wellington Button -->
+            <button class="map-button btn-wellington" onclick="showLocationInfo('wellington')" data-location="wellington">
+                🏛️
+            </button>
+            
+            <!-- Christchurch Button -->
+            <button class="map-button btn-christchurch" onclick="showLocationInfo('christchurch')" data-location="christchurch">
+                🌸
+            </button>
+            
+            <!-- Dunedin Button -->
+            <button class="map-button btn-dunedin" onclick="showLocationInfo('dunedin')" data-location="dunedin">
+                🐧
+            </button>
+            
+            <!-- Rotorua Button -->
+            <button class="map-button btn-rotorua" onclick="showLocationInfo('rotorua')" data-location="rotorua">
+                🌋
+            </button>
+            
+            <!-- Queenstown Button -->
+            <button class="map-button btn-queenstown" onclick="showLocationInfo('queenstown')" data-location="queenstown">
+                🏔️
+            </button>
+            
+            <!-- Nelson Button -->
+            <button class="map-button btn-nelson" onclick="showLocationInfo('nelson')" data-location="nelson">
+                🌿
+            </button>
+            
+            <!-- Napier Button -->
+            <button class="map-button btn-napier" onclick="showLocationInfo('napier')" data-location="napier">
+                🍇
+            </button>
+            
+            <!-- YOU CAN ADD MORE BUTTONS HERE FOLLOWING THE SAME PATTERN -->
+            <!-- 
+            <button class="map-button" style="top: X%; left: Y%;" onclick="showLocationInfo('your-location')" data-location="your-location">
+                🦎
+            </button>
+            -->
+            
+            <!-- Information Panel -->
+            <div id="location-info" class="location-info">
+                <button class="close-button" onclick="hideLocationInfo()">×</button>
+                <h3 id="info-title" class="location-title">Location Name</h3>
+                <p id="info-description" class="location-description">Location description goes here...</p>
+                <div class="species-highlight">
+                    <h4>Primary Species:</h4>
+                    <p id="info-species">Species information goes here...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Location data - YOU CAN EDIT THIS INFORMATION
+        const locationData = {
+            auckland: {
+                title: "Auckland Region",
+                description: "New Zealand's largest city, surrounded by harbors and volcanic cones. Home to diverse urban wildlife.",
+                species: "Tūī (Prosthemadera novaeseelandiae) - These beautiful songbirds are common in Auckland's parks and gardens, known for their distinctive white throat tufts and melodious calls."
+            },
+            wellington: {
+                title: "Wellington Region",
+                description: "The capital city, known for its windy weather and harbor setting. Rich birdlife due to predator-free islands nearby.",
+                species: "Little Blue Penguin / Kororā (Eudyptula minor) - The world's smallest penguin species can be found around Wellington's rocky shores and harbor areas."
+            },
+            christchurch: {
+                title: "Christchurch Region",
+                description: "The largest city in the South Island, featuring gardens, parks, and nearby mountains with diverse ecosystems.",
+                species: "Canterbury Mudfish (Neochanna burrowsius) - This critically endangered native fish is found in wetlands around Canterbury, including areas near Christchurch."
+            },
+            dunedin: {
+                title: "Dunedin Region",
+                description: "Known for its Scottish heritage and proximity to the Otago Peninsula, famous for marine wildlife.",
+                species: "Yellow-eyed Penguin / Hoiho (Megadyptes antipodes) - One of the world's rarest penguins, primarily found on the Otago Peninsula near Dunedin."
+            },
+            rotorua: {
+                title: "Rotorua Region",
+                description: "Famous for geothermal activity and native forests. The thermal environment creates unique ecosystems.",
+                species: "North Island Brown Kiwi (Apteryx mantelli) - These iconic flightless birds can be found in the forests around Rotorua, particularly in predator-controlled areas."
+            },
+            queenstown: {
+                title: "Queenstown Region",
+                description: "Adventure capital surrounded by mountains and lakes. Alpine and subalpine species thrive in this dramatic landscape.",
+                species: "Kea (Nestor notabilis) - The world's only alpine parrot, known for its intelligence and curiosity. Found in the mountainous regions around Queenstown."
+            },
+            nelson: {
+                title: "Nelson Region",
+                description: "Known for its sunny climate and Abel Tasman National Park. Diverse coastal and forest habitats.",
+                species: "Takahe (Porphyrio hochstetteri) - These large flightless birds have been reintroduced to some areas around Nelson, particularly in controlled environments."
+            },
+            napier: {
+                title: "Napier / Hawke's Bay",
+                description: "Wine country with a warm climate. Mix of coastal, wetland, and agricultural environments.",
+                species: "Australasian Bittern / Matuku (Botaurus poiciloptilus) - This secretive wetland bird can be found in the remaining wetlands of Hawke's Bay."
+            }
+        };
+        
+        // Function to show location information
+        function showLocationInfo(location) {
+            const data = locationData[location];
+            if (!data) return;
+            
+            const infoPanel = document.getElementById('location-info');
+            const title = document.getElementById('info-title');
+            const description = document.getElementById('info-description');
+            const species = document.getElementById('info-species');
+            
+            // Update content
+            title.textContent = data.title;
+            description.textContent = data.description;
+            species.textContent = data.species;
+            
+            // Position the panel near the clicked button
+            const button = document.querySelector(`[data-location="${location}"]`);
+            const buttonRect = button.getBoundingClientRect();
+            const mapContainer = document.querySelector('.map-container');
+            const containerRect = mapContainer.getBoundingClientRect();
+            
+            // Calculate position relative to map container
+            const left = buttonRect.left - containerRect.left + button.offsetWidth / 2;
+            const top = buttonRect.top - containerRect.top + button.offsetHeight + 15;
+            
+            infoPanel.style.left = `${left}px`;
+            infoPanel.style.top = `${top}px`;
+            
+            // Adjust if panel goes off screen
+            const panelRect = infoPanel.getBoundingClientRect();
+            if (panelRect.right > window.innerWidth - 20) {
+                infoPanel.style.left = `${left - 200}px`;
+            }
+            if (panelRect.left < 20) {
+                infoPanel.style.left = '20px';
+            }
+            
+            // Show the panel
+            infoPanel.classList.add('show');
+        }
+        
+        // Function to hide location information
+        function hideLocationInfo() {
+            const infoPanel = document.getElementById('location-info');
+            infoPanel.classList.remove('show');
+        }
+        
+        // Hide info panel when clicking outside
+        document.addEventListener('click', function(e) {
+            const infoPanel = document.getElementById('location-info');
+            const isButton = e.target.classList.contains('map-button');
+            const isPanel = infoPanel.contains(e.target);
+            
+            if (!isButton && !isPanel) {
+                hideLocationInfo();
+            }
+        });
+        
+        // Add hover effects for buttons
+        document.querySelectorAll('.map-button').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
