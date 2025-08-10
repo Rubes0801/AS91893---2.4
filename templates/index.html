@@ -6,54 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/static/css/styles.css" />
     <title>NZ Wildlife</title>
-    <style>
-        .star-button {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: all 0.3s ease;
-            z-index: 10;
-            backdrop-filter: blur(10px);
-        }
-
-        .star-button:hover {
-            background: rgba(255, 215, 0, 0.9);
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-        }
-
-        .star-button.favourited {
-            background: rgba(255, 215, 0, 0.9);
-            color: #fff;
-        }
-
-        .star-button.favourited:hover {
-            background: rgba(255, 215, 0, 1);
-        }
-
-        .star-icon {
-            color: #fff;
-            transition: all 0.3s ease;
-        }
-
-        .star-button.favourited .star-icon {
-            color: #fff;
-        }
-
-        .species-card {
-            position: relative;
-        }
-    </style>
 </head>
 <body>
     <!-- Fixed header - NOW includes favourites link -->
@@ -73,7 +25,10 @@
         <!-- Search form -->
         <form action="/species" method="get">
             <div class="search-container">
-                <input type="text" id="search-box" name="name" class="search-input" placeholder="Search...">
+                <div class="search-wrapper">
+                    <input type="text" id="search-box" name="name" class="search-input" placeholder="Search..." autocomplete="off">
+                    <div id="search-dropdown" class="search-dropdown"></div>
+                </div>
                 <button type="submit">Search / mohaha</button>
             </div>
             <br>
@@ -162,7 +117,7 @@
         // Function to toggle favourite status
         function toggleFavourite(speciesId) {
             let favourites = getFavourites();
-            const starButton = document.getElementById(`star-${speciesId}`);
+            const starButton = document.getElementById('star-' + speciesId);
             const starIcon = starButton.querySelector('.star-icon');
             
             const index = favourites.indexOf(speciesId);
@@ -193,8 +148,8 @@
             const favourites = getFavourites();
             
             favourites.forEach(speciesId => {
-                const starButton = document.getElementById(`star-${speciesId}`);
-                const starIcon = starButton?.querySelector('.star-icon');
+                const starButton = document.getElementById('star-' + speciesId);
+                const starIcon = starButton ? starButton.querySelector('.star-icon') : null;
                 
                 if (starButton && starIcon) {
                     starButton.classList.add('favourited');
@@ -203,20 +158,119 @@
             });
         }
 
-        // Initialize when page loads
+        // Search dropdown functionality
+        let searchTimeout;
+        let currentHighlightIndex = -1;
+        
+        function setupSearchDropdown() {
+            const searchBox = document.getElementById('search-box');
+            const searchDropdown = document.getElementById('search-dropdown');
+            
+            if (!searchBox || !searchDropdown) return;
+            
+            searchBox.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                const query = this.value.trim();
+                
+                if (query.length < 2) {
+                    searchDropdown.classList.remove('show');
+                    return;
+                }
+                
+                searchTimeout = setTimeout(() => {
+                    fetch('/api/search-suggestions?q=' + encodeURIComponent(query))
+                        .then(response => response.json())
+                        .then(data => {
+                            displaySuggestions(data.suggestions);
+                        })
+                        .catch(error => {
+                            console.error('Search error:', error);
+                            searchDropdown.classList.remove('show');
+                        });
+                }, 300);
+            });
+            
+            // Handle keyboard navigation
+            searchBox.addEventListener('keydown', function(e) {
+                const items = searchDropdown.querySelectorAll('.dropdown-item');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    currentHighlightIndex = Math.min(currentHighlightIndex + 1, items.length - 1);
+                    updateHighlight(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    currentHighlightIndex = Math.max(currentHighlightIndex - 1, -1);
+                    updateHighlight(items);
+                } else if (e.key === 'Enter' && currentHighlightIndex >= 0) {
+                    e.preventDefault();
+                    if (items[currentHighlightIndex]) {
+                        selectSuggestion(items[currentHighlightIndex].dataset.text);
+                    }
+                } else if (e.key === 'Escape') {
+                    searchDropdown.classList.remove('show');
+                    currentHighlightIndex = -1;
+                }
+            });
+            
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchBox.contains(e.target) && !searchDropdown.contains(e.target)) {
+                    searchDropdown.classList.remove('show');
+                    currentHighlightIndex = -1;
+                }
+            });
+        }
+        
+        function displaySuggestions(suggestions) {
+            const searchDropdown = document.getElementById('search-dropdown');
+            
+            if (suggestions.length === 0) {
+                searchDropdown.classList.remove('show');
+                return;
+            }
+            
+            searchDropdown.innerHTML = suggestions.map(suggestion => {
+                // Escape quotes in the text for the onclick attribute
+                const escapedText = suggestion.text.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                return `
+                    <div class="dropdown-item" data-text="${suggestion.text}" onclick="selectSuggestion('${escapedText}')">
+                        <span class="dropdown-item-text">${suggestion.text}</span>
+                        <span class="dropdown-item-type">${suggestion.type}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            searchDropdown.classList.add('show');
+            currentHighlightIndex = -1;
+        }
+        
+        function updateHighlight(items) {
+            items.forEach((item, index) => {
+                if (index === currentHighlightIndex) {
+                    item.classList.add('highlighted');
+                } else {
+                    item.classList.remove('highlighted');
+                }
+            });
+        }
+        
+        function selectSuggestion(text) {
+            const searchBox = document.getElementById('search-box');
+            const searchDropdown = document.getElementById('search-dropdown');
+            
+            searchBox.value = text;
+            searchDropdown.classList.remove('show');
+            currentHighlightIndex = -1;
+            
+            // Submit the form
+            searchBox.closest('form').submit();
+        }
+
+                // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initializeStars();
-            
-            // Add active state styling for navigation
-            const style = document.createElement('style');
-            style.textContent = `
-                .auth-link.active {
-                    background: rgba(127, 176, 105, 0.2);
-                    border-color: var(--accent-color);
-                    color: var(--accent-color);
-                }
-            `;
-            document.head.appendChild(style);
+            setupSearchDropdown();
         });
     </script>
 
