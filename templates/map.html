@@ -75,7 +75,7 @@
             </button>
 
             <!-- taranaki Button -->
-            <button class="map-button btn-taranaki"  onclick="showLocationInfo('taranki')" data-location="taranaki">
+            <button class="map-button btn-taranaki"  onclick="showLocationInfo('taranaki')" data-location="taranaki">
                 🗻
             </button>
 
@@ -176,7 +176,47 @@
                 title: "Napier / Hawke's Bay",
                 description: "Wine country with a warm climate. Mix of coastal, wetland, and agricultural environments.",
                 species: "Australasian Bittern / Matuku (Botaurus poiciloptilus) - This secretive wetland bird can be found in the remaining wetlands of Hawke's Bay."
-            }
+            },
+            waikato: {
+        title: "Waikato Region",
+        description: "Known for its fertile farmland, the mighty Waikato River, and diverse wetland ecosystems. Home to both native and introduced species.",
+        species: "Australasian Shoveler / Kuruwhengi (Spatula rhynchotis) - These distinctive ducks with their large, spoon-shaped bills can be found in Waikato's wetlands and shallow lakes."
+    },
+    taranaki: {
+        title: "Taranaki Region", 
+        description: "Dominated by the iconic Mount Taranaki, this region features lush rainforests, coastal areas, and volcanic soils supporting unique ecosystems.",
+        species: "North Island Robin / Toutouwai (Petroica longipes) - These fearless little birds inhabit the native forests around Mount Taranaki, known for their curious nature."
+    },
+    manawatu: {
+        title: "Manawatū-Whanganui Region",
+        description: "A diverse region of rolling hills, river valleys, and coastal plains. Important for both agriculture and native wildlife conservation.",
+        species: "New Zealand Falcon / Kārearea (Falco novaeseelandiae) - These powerful native raptors hunt across the open farmlands and forest edges of Manawatū."
+    },
+    gisborne: {
+        title: "Gisborne / Tairāwhiti Region", 
+        description: "The first place in the world to see the sunrise each day. Coastal forests, rivers, and marine environments support diverse wildlife.",
+        species: "Northern New Zealand Dotterel / Tūturiwhatu (Charadrius obscurus aquilonius) - These endangered shorebirds nest on Gisborne's sandy beaches and estuaries."
+    },
+    northland: {
+        title: "Northland Region",
+        description: "The northernmost region featuring subtropical forests, extensive coastlines, and the famous kauri trees. Rich marine and terrestrial biodiversity.",
+        species: "New Zealand Dotterel / Tūturiwhatu (Charadrius obscurus) - These vulnerable shorebirds breed on Northland's sandy beaches and harbor shores."
+    },
+    tasman: {
+        title: "Tasman Region",
+        description: "Home to Abel Tasman National Park and Golden Bay. Diverse landscapes from coastal areas to mountain ranges support varied wildlife.",
+        species: "Great Spotted Kiwi / Roroa (Apteryx haastii) - The largest kiwi species, found in the forested mountains of Tasman region, particularly around Kahurangi National Park."
+    },
+    marlborough: {
+        title: "Marlborough Region",
+        description: "Famous for wine production and the Marlborough Sounds. The intricate waterways and coastal environment create unique marine habitats.",
+        species: "King Shag / Kawau (Leucocarbo carunculatus) - This endemic cormorant is found only in the Marlborough Sounds, making it one of the world's rarest seabirds."
+    },
+    "west coast": {
+        title: "West Coast Region",
+        description: "Rugged coastline with dense rainforests and glacial landscapes. One of New Zealand's most pristine wilderness areas with unique flora and fauna.",
+        species: "Fiordland Crested Penguin / Tawaki (Eudyptes pachyrhynchus) - These distinctive yellow-crested penguins nest in the coastal forests and rocky shores of the West Coast."
+    }
         };
         
         // Function to show location information
@@ -196,28 +236,48 @@
             
             // Position the panel near the clicked button
             const button = document.querySelector(`[data-location="${location}"]`);
-            const buttonRect = button.getBoundingClientRect();
             const mapContainer = document.querySelector('.map-container');
+
+            // Get button position relative to map container
             const containerRect = mapContainer.getBoundingClientRect();
-            
+            const buttonRect = button.getBoundingClientRect();
+
             // Calculate position relative to map container
-            const left = buttonRect.left - containerRect.left + button.offsetWidth / 2;
+            const left = buttonRect.left - containerRect.left + (button.offsetWidth / 2) - 150; // Center panel under button
             const top = buttonRect.top - containerRect.top + button.offsetHeight + 15;
-            
+
+            // Set initial position
             infoPanel.style.left = `${left}px`;
             infoPanel.style.top = `${top}px`;
-            
-            // Adjust if panel goes off screen
-            const panelRect = infoPanel.getBoundingClientRect();
-            if (panelRect.right > window.innerWidth - 20) {
-                infoPanel.style.left = `${left - 200}px`;
-            }
-            if (panelRect.left < 20) {
-                infoPanel.style.left = '20px';
-            }
-            
-            // Show the panel
+
+            // Show the panel first to get accurate measurements
             infoPanel.classList.add('show');
+
+            // Get the panel's actual dimensions after showing
+            const panelRect = infoPanel.getBoundingClientRect();
+            const containerWidth = mapContainer.offsetWidth;
+
+            // Adjust horizontal position if panel goes outside container
+            let adjustedLeft = left;
+            if (left < 10) {
+                adjustedLeft = 10; // Minimum left margin
+            } else if (left + 300 > containerWidth - 10) { // 300 is approximate panel width
+                adjustedLeft = containerWidth - 310; // Keep within container
+            }
+
+            // Adjust vertical position if needed
+            let adjustedTop = top;
+            if (top + panelRect.height > mapContainer.offsetHeight - 10) {
+                adjustedTop = buttonRect.top - containerRect.top - panelRect.height - 15; // Position above button
+            }
+
+            // Apply final position
+            infoPanel.style.left = `${adjustedLeft}px`;
+            infoPanel.style.top = `${adjustedTop}px`;
+
+        // Apply final position
+            infoPanel.style.left = `${adjustedLeft}px`;
+            infoPanel.style.top = `${adjustedTop}px`;
         }
         
         // Function to hide location information
