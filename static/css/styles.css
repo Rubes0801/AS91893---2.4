@@ -317,7 +317,8 @@ img {
   border: 2px solid rgba(93, 124, 90, 0.2);
 }
 
-img:hover {
+/* Hover effects for images - but NOT the map */
+img:hover:not(.nz-map) {
   transform: scale(1.7) rotate(1deg); /* Increased scale for larger images */
   box-shadow: 
     0 20px 50px var(--shadow-color),
@@ -328,6 +329,23 @@ img:hover {
   filter: brightness(1.15) saturate(1.4) contrast(1.2);
   border-radius: 16px;
   border-color: var(--accent-color);
+}
+
+/* Specific styling for the NZ map - no hover scaling */
+.nz-map {
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 4px 15px var(--shadow-color));
+  transition: all 0.3s ease;
+  border: none; /* Remove the border for the map */
+  box-shadow: none; /* Remove the box shadow for the map */
+  border-radius: 0; /* Remove border radius for the map */
+}
+
+/* No hover effects for the map image */
+.nz-map:hover {
+  transform: none; /* Prevent scaling */
+  filter: drop-shadow(0 4px 15px var(--shadow-color)); /* Keep the same filter */
 }
 
 .species-grid {
@@ -1213,14 +1231,23 @@ select:focus,
 }
 
 /* Map button positioning classes - you can use these for easy positioning */
-.btn-auckland { top: 15%; left: 60%; }
+.btn-auckland { top: 19%; left: 60%; }
 .btn-wellington { top: 65%; left: 55%; }
-.btn-christchurch { top: 75%; left: 50%; }
-.btn-dunedin { top: 88%; left: 45%; }
-.btn-rotorua { top: 35%; left: 62%; }
-.btn-queenstown { top: 85%; left: 35%; }
-.btn-nelson { top: 55%; left: 48%; }
-.btn-napier { top: 50%; left: 70%; }
+.btn-christchurch { top: 65%; left: 38%; }
+.btn-dunedin { top: 76%; left: 27%; }
+.btn-rotorua { top: 28%; left: 77%; }
+.btn-queenstown { top: 79%; left: 17%; }
+.btn-nelson { top: 47%; left: 53%; }
+.btn-napier { top: 35%; left: 75%; }
+.btn-waikato { top: 25%; left: 67%; }
+.btn-taranaki { top: 36%; left: 59%; }
+.btn-manawatu { top: 39%; left: 68%; }
+.btn-gisborne { top: 29%; left: 86%; }
+.btn-wellington { top: 49%; left: 66%; }
+.btn-northland { top: 10%; left: 56%; }
+.btn-tasman { top: 52%; left: 48%; }
+.btn-marlborough { top: 52%; left: 54%; }
+.btn-westcoast { top: 60%; left: 34%; }
 
 /* Responsive adjustments for map */
 @media (max-width: 768px) {
