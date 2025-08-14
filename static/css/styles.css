@@ -1301,3 +1301,409 @@ select:focus,
         padding: 15px;
     }
 }
+
+/* Logo styling for top header */
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
+}
+
+.logo-image {
+  height: 40px;
+  width: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(127, 176, 105, 0.3);
+  transition: all 0.3s ease;
+}
+
+.logo-image:hover {
+  box-shadow: 0 4px 15px rgba(127, 176, 105, 0.5);
+}
+
+/* Adjust auth links to stay on the right */
+.auth-links {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin: 0; /* Remove auto margin */
+  max-width: none; /* Remove max-width */
+}
+
+/* Mobile responsiveness for logo */
+@media (max-width: 768px) {
+  .top-header {
+    padding: 12px 20px;
+  }
+  
+  .logo-image {
+    height: 35px;
+  }
+  
+  .auth-links {
+    gap: 15px;
+  }
+  
+  .auth-link {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-header {
+    padding: 10px 15px;
+  }
+  
+  .logo-image {
+    height: 30px;
+  }
+  
+  .auth-links {
+    gap: 10px;
+  }
+  
+  .auth-link {
+    font-size: 0.7rem;
+    padding: 5px 8px;
+  }
+}
+
+/* About Page Specific Styles - Add these to the end of your styles.css file */
+
+/* About Page Layout */
+.about-section {
+    margin-bottom: 50px;
+    background: linear-gradient(135deg, var(--card-background), rgba(42, 49, 43, 0.95));
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 
+        0 8px 32px var(--shadow-color),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--accent-color);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.about-section:hover {
+    box-shadow: 
+        0 12px 40px var(--shadow-color),
+        0 4px 12px rgba(74, 60, 40, 0.25);
+    transform: translateY(-2px);
+}
+
+.about-content {
+    color: var(--text-color);
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.about-content p {
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+/* About Cards Grid */
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.about-card {
+    background: linear-gradient(135deg, rgba(127, 176, 105, 0.1), rgba(42, 49, 43, 0.8));
+    border-radius: 12px;
+    padding: 30px 25px;
+    text-align: center;
+    border: 1px solid var(--accent-color);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.about-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(127, 176, 105, 0.2), transparent);
+    transition: left 0.8s ease;
+}
+
+.about-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 15px 40px var(--shadow-color),
+        0 5px 15px rgba(127, 176, 105, 0.3);
+    border-color: var(--accent-bright);
+}
+
+.about-card:hover::before {
+    left: 100%;
+}
+
+.about-card-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.about-card h3 {
+    color: var(--heading-color);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+@supports not (background-clip: text) {
+    .about-card h3 {
+        color: var(--heading-color);
+        background: none;
+    }
+}
+
+.about-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Challenge Grid */
+.challenge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.challenge-item {
+    background: rgba(74, 60, 40, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 4px solid var(--accent-color);
+    transition: all 0.3s ease;
+}
+
+.challenge-item:hover {
+    background: rgba(127, 176, 105, 0.2);
+    transform: translateX(5px);
+    border-left-width: 6px;
+}
+
+.challenge-item h4 {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.challenge-item p {
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Success Stories */
+.success-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.success-story {
+    background: var(--card-background);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px var(--shadow-color);
+    border: 1px solid var(--accent-color);
+    transition: all 0.4s ease;
+}
+
+.success-story:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px var(--shadow-color);
+}
+
+.success-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.success-content {
+    padding: 25px;
+}
+
+.success-content h3 {
+    color: var(--heading-color);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.success-content p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Involvement Options */
+.involvement-options {
+    margin-top: 25px;
+}
+
+.involvement-item {
+    background: rgba(127, 176, 105, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--accent-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    transition: all 0.3s ease;
+}
+
+.involvement-item:hover {
+    background: rgba(127, 176, 105, 0.2);
+    transform: translateX(5px);
+    border-left-width: 6px;
+}
+
+.involvement-item strong {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+/* Contact Section */
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.contact-info h3,
+.quick-links h3 {
+    color: var(--heading-color);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+
+.contact-details {
+    margin-top: 20px;
+}
+
+.contact-item {
+    margin-bottom: 12px;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.contact-item strong {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+.link-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.quick-link {
+    display: inline-block;
+    padding: 12px 20px;
+    background: var(--gradient-earth);
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid var(--accent-color);
+}
+
+.quick-link:hover {
+    background: var(--gradient-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(127, 176, 105, 0.4);
+    color: var(--text-color);
+}
+
+/* Responsive Design for About Page */
+@media (max-width: 768px) {
+    .about-section {
+        padding: 30px 20px;
+        margin-bottom: 30px;
+    }
+    
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .challenge-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .success-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .about-card {
+        padding: 25px 20px;
+    }
+    
+    .about-card-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-section {
+        padding: 20px 15px;
+    }
+    
+    .about-content {
+        font-size: 1rem;
+    }
+    
+    .about-card h3 {
+        font-size: 1.2rem;
+    }
+    
+    .about-card-icon {
+        font-size: 2rem;
+    }
+}

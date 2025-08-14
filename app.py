@@ -348,6 +348,11 @@ def map_page():
     """Route for the interactive map page"""
     return render_template("map.html")
 
+@app.route("/about")
+def about():
+    """Route for the about page"""
+    return render_template("about.html")
+
 def init_db():
     cursor = get_db().cursor()
     cursor.execute('''
