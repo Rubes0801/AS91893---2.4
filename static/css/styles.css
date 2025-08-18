@@ -1324,6 +1324,7 @@ select:focus,
 .logo-image {
   height: 40px;
   width: auto;
+  max-width: 100px; /* Add this constraint */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(127, 176, 105, 0.3);
   transition: all 0.3s ease;
@@ -1342,7 +1343,6 @@ select:focus,
   max-width: none; /* Remove max-width */
 }
 
-/* Mobile responsiveness for logo */
 @media (max-width: 768px) {
   .top-header {
     padding: 12px 20px;
@@ -1350,6 +1350,7 @@ select:focus,
   
   .logo-image {
     height: 35px;
+    max-width: 120px; /* Add this constraint */
   }
   
   .auth-links {
@@ -1369,6 +1370,7 @@ select:focus,
   
   .logo-image {
     height: 30px;
+    max-width: 100px; /* Add this constraint */
   }
   
   .auth-links {
