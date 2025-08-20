@@ -277,6 +277,36 @@
             setupSearchDropdown();
         });
     </script>
-
+<script>
+// Add active state styling and auto-detect current page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add the active state styling
+    const style = document.createElement('style');
+    style.textContent = `
+        .auth-link.active {
+            background: rgba(127, 176, 105, 0.2);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Auto-detect and highlight current page
+    const currentPath = window.location.pathname;
+    const authLinks = document.querySelectorAll('.auth-link');
+    
+    // Remove all active classes first
+    authLinks.forEach(link => link.classList.remove('active'));
+    
+    // Add active class to current page
+    authLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if ((currentPath === '/' && href === '/') ||
+            (currentPath !== '/' && href !== '/' && currentPath.startsWith(href))) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
 </body>
 </html>
