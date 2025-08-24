@@ -42,38 +42,43 @@
 
         <h2>All Species Data / Raraunga Katoa</h2>
             
-        <div class="species-grid">
-            {% for item in species %}
-            <div class="species-card">
-                <button class="star-button" onclick="toggleFavourite({{ item[0] }})" id="star-{{ item[0] }}">
-                    <span class="star-icon">☆</span>
-                </button>
-                <img src="{{ item[10] if item[10] and item[10] != '' else 'https://via.placeholder.com/400x300/4a3c28/f5f3f0?text=' + item[1]|urlencode }}" alt="{{ item[1] }} image" class="species-card-image">
-                <div class="species-card-content">
-                    <div class="species-card-title">{{ item[1] }}</div>
-                    <div class="species-card-subtitle">{{ item[2] }}</div>
-                    <div class="species-card-details">
-                        <div class="species-card-detail">
-                            <span class="species-card-label">Type:</span>
-                            <span class="species-card-value">{{ item[3] }}</span>
-                        </div>
-                        <div class="species-card-detail">
-                            <span class="species-card-label">Status:</span>
-                            <span class="species-card-value">{{ item[7] }}</span>
-                        </div>
-                        <div class="species-card-detail">
-                            <span class="species-card-label">Family:</span>
-                            <span class="species-card-value">{{ item[8] }}</span>
-                        </div>
-                        <div class="species-card-detail">
-                            <span class="species-card-label">Numbers:</span>
-                            <span class="species-card-value">{{ item[9] }}</span>
-                        </div>
-                    </div>
+        <!-- Replace your species-grid section with this fixed version: -->
+
+<div class="species-grid">
+    {% for item in species %}
+    <div class="species-card">
+        <button class="star-button" onclick="toggleFavourite({{ item[0] }})" id="star-{{ item[0] }}">
+            <span class="star-icon">☆</span>
+        </button>
+        <img src="{% if item[10] and item[10].strip() %}{{ item[10] }}{% else %}https://via.placeholder.com/400x300/4a3c28/f5f3f0?text={{ item[1]|urlencode }}{% endif %}" 
+     alt="{{ item[1] }} wildlife image" 
+     class="species-card-image"
+     onerror="this.src='https://via.placeholder.com/400x300/4a3c28/f5f3f0?text={{ item[1]|urlencode }}'">
+        <div class="species-card-content">
+            <div class="species-card-title">{{ item[1] }}</div>
+            <div class="species-card-subtitle">{{ item[2] }}</div>
+            <div class="species-card-details">
+                <div class="species-card-detail">
+                    <span class="species-card-label">Type:</span>
+                    <span class="species-card-value">{{ item[3] }}</span>
+                </div>
+                <div class="species-card-detail">
+                    <span class="species-card-label">Status:</span>
+                    <span class="species-card-value">{{ item[7] }}</span>
+                </div>
+                <div class="species-card-detail">
+                    <span class="species-card-label">Family:</span>
+                    <span class="species-card-value">{{ item[8] }}</span>
+                </div>
+                <div class="species-card-detail">
+                    <span class="species-card-label">Numbers:</span>
+                    <span class="species-card-value">{{ item[9] }}</span>
                 </div>
             </div>
-            {% endfor %}
         </div>
+    </div>
+    {% endfor %}
+</div>
 
         <h2>Origin Status</h2>
         <div class="table-wrapper">

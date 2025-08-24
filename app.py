@@ -79,15 +79,15 @@ def home():
     }
     
     return render_template(
-    "index.html", 
-    species=species_results,
-    origin_status=origin_status_results,
-    species_type=species_type_results,
-    status=status_results,
-    status_dict=status_dict,
-    selected_field=selected_field,
-    field_indices=field_indices
-)
+        "index.html", 
+        species=species_results,  # Use original species data
+        origin_status=origin_status_results,
+        species_type=species_type_results,
+        status=status_results,
+        status_dict=status_dict,
+        selected_field=selected_field,
+        field_indices=field_indices
+    )
 
 
 @app.route("/species")
