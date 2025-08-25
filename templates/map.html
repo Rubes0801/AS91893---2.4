@@ -30,14 +30,14 @@
             <!-- New Zealand Map -->
             <img src="/static/images/NZ_Map.svg" alt="New Zealand Map" class="nz-map">
             
-            <!-- Interactive Buttons - YOU CAN EDIT THESE POSITIONS AND CONTENT -->
+            <!-- Interactive Buttons - Fixed positioning -->
             
             <!-- Auckland Button -->
             <button class="map-button btn-auckland" onclick="showLocationInfo('auckland')" data-location="auckland">
                 🏙️
             </button>
             
-            <!-- Wellington Button -->
+            <!-- Wellington Button - Keep this one, properly positioned for capital -->
             <button class="map-button btn-wellington" onclick="showLocationInfo('wellington')" data-location="wellington">
                 🏛️
             </button>
@@ -73,56 +73,44 @@
             </button>
 
             <!-- Waikato Button -->
-            <button class="map-button btn-waikato"  onclick="showLocationInfo('waikato')" data-location="waikato">
+            <button class="map-button btn-waikato" onclick="showLocationInfo('waikato')" data-location="waikato">
                 🦎
             </button>
 
-            <!-- taranaki Button -->
-            <button class="map-button btn-taranaki"  onclick="showLocationInfo('taranaki')" data-location="taranaki">
+            <!-- Taranaki Button -->
+            <button class="map-button btn-taranaki" onclick="showLocationInfo('taranaki')" data-location="taranaki">
                 🗻
             </button>
 
-            <!-- manawatu Button -->
-            <button class="map-button btn-manawatu"  onclick="showLocationInfo('manawatu')" data-location="manawatu">
-                🐑
+            <!-- Manawatu Button -->
+            <button class="map-button btn-manawatu" onclick="showLocationInfo('manawatu')" data-location="manawatu">
+                💚
             </button>
             
-            <!-- gisborne Button -->
-            <button class="map-button btn-gisborne"  onclick="showLocationInfo('gisborne')" data-location="gisborne">
+            <!-- Gisborne Button -->
+            <button class="map-button btn-gisborne" onclick="showLocationInfo('gisborne')" data-location="gisborne">
                 🌊
             </button>
 
-            <!-- wellington Button -->
-            <button class="map-button btn-wellington"  onclick="showLocationInfo('wellington')" data-location="wellington">
-                🌪️
-            </button>
-
-            <!-- northland Button -->
-            <button class="map-button btn-northland"  onclick="showLocationInfo('northland')" data-location="northland">
+            <!-- Northland Button -->
+            <button class="map-button btn-northland" onclick="showLocationInfo('northland')" data-location="northland">
                 🦈
             </button>
 
-            <!-- tasman Button -->
-            <button class="map-button btn-tasman"  onclick="showLocationInfo('tasman')" data-location="tasman">
+            <!-- Tasman Button -->
+            <button class="map-button btn-tasman" onclick="showLocationInfo('tasman')" data-location="tasman">
                 🚤
             </button>
 
-            <!-- marlborough Button -->
-            <button class="map-button btn-marlborough"  onclick="showLocationInfo('marlborough')" data-location="marlborough">
+            <!-- Marlborough Button -->
+            <button class="map-button btn-marlborough" onclick="showLocationInfo('marlborough')" data-location="marlborough">
                 🐬
             </button>
 
-            <!-- west coast Button -->
-            <button class="map-button btn-westcoast"  onclick="showLocationInfo('west coast')" data-location="west coast">
+            <!-- West Coast Button -->
+            <button class="map-button btn-westcoast" onclick="showLocationInfo('west coast')" data-location="west coast">
                 🌳
             </button>
-
-
-            <!-- 
-            <button class="map-button" style="top: X%; left: Y%;" onclick="showLocationInfo('your-location')" data-location="your-location">
-                🦎
-            </button>
-            -->
             
             <!-- Information Panel -->
             <div id="location-info" class="location-info">
@@ -181,45 +169,45 @@
                 species: "Australasian Bittern / Matuku (Botaurus poiciloptilus) - This secretive wetland bird can be found in the remaining wetlands of Hawke's Bay."
             },
             waikato: {
-        title: "Waikato Region",
-        description: "Known for its fertile farmland, the mighty Waikato River, and diverse wetland ecosystems. Home to both native and introduced species.",
-        species: "Australasian Shoveler / Kuruwhengi (Spatula rhynchotis) - These distinctive ducks with their large, spoon-shaped bills can be found in Waikato's wetlands and shallow lakes."
-    },
-    taranaki: {
-        title: "Taranaki Region", 
-        description: "Dominated by the iconic Mount Taranaki, this region features lush rainforests, coastal areas, and volcanic soils supporting unique ecosystems.",
-        species: "North Island Robin / Toutouwai (Petroica longipes) - These fearless little birds inhabit the native forests around Mount Taranaki, known for their curious nature."
-    },
-    manawatu: {
-        title: "Manawatū-Whanganui Region",
-        description: "A diverse region of rolling hills, river valleys, and coastal plains. Important for both agriculture and native wildlife conservation.",
-        species: "New Zealand Falcon / Kārearea (Falco novaeseelandiae) - These powerful native raptors hunt across the open farmlands and forest edges of Manawatū."
-    },
-    gisborne: {
-        title: "Gisborne / Tairāwhiti Region", 
-        description: "The first place in the world to see the sunrise each day. Coastal forests, rivers, and marine environments support diverse wildlife.",
-        species: "Northern New Zealand Dotterel / Tūturiwhatu (Charadrius obscurus aquilonius) - These endangered shorebirds nest on Gisborne's sandy beaches and estuaries."
-    },
-    northland: {
-        title: "Northland Region",
-        description: "The northernmost region featuring subtropical forests, extensive coastlines, and the famous kauri trees. Rich marine and terrestrial biodiversity.",
-        species: "New Zealand Dotterel / Tūturiwhatu (Charadrius obscurus) - These vulnerable shorebirds breed on Northland's sandy beaches and harbor shores."
-    },
-    tasman: {
-        title: "Tasman Region",
-        description: "Home to Abel Tasman National Park and Golden Bay. Diverse landscapes from coastal areas to mountain ranges support varied wildlife.",
-        species: "Great Spotted Kiwi / Roroa (Apteryx haastii) - The largest kiwi species, found in the forested mountains of Tasman region, particularly around Kahurangi National Park."
-    },
-    marlborough: {
-        title: "Marlborough Region",
-        description: "Famous for wine production and the Marlborough Sounds. The intricate waterways and coastal environment create unique marine habitats.",
-        species: "King Shag / Kawau (Leucocarbo carunculatus) - This endemic cormorant is found only in the Marlborough Sounds, making it one of the world's rarest seabirds."
-    },
-    "west coast": {
-        title: "West Coast Region",
-        description: "Rugged coastline with dense rainforests and glacial landscapes. One of New Zealand's most pristine wilderness areas with unique flora and fauna.",
-        species: "Fiordland Crested Penguin / Tawaki (Eudyptes pachyrhynchus) - These distinctive yellow-crested penguins nest in the coastal forests and rocky shores of the West Coast."
-    }
+                title: "Waikato Region",
+                description: "Known for its fertile farmland, the mighty Waikato River, and diverse wetland ecosystems. Home to both native and introduced species.",
+                species: "Australasian Shoveler / Kuruwhengi (Spatula rhynchotis) - These distinctive ducks with their large, spoon-shaped bills can be found in Waikato's wetlands and shallow lakes."
+            },
+            taranaki: {
+                title: "Taranaki Region", 
+                description: "Dominated by the iconic Mount Taranaki, this region features lush rainforests, coastal areas, and volcanic soils supporting unique ecosystems.",
+                species: "North Island Robin / Toutouwai (Petroica longipes) - These fearless little birds inhabit the native forests around Mount Taranaki, known for their curious nature."
+            },
+            manawatu: {
+                title: "Manawatū-Whanganui Region",
+                description: "A diverse region of rolling hills, river valleys, and coastal plains. Important for both agriculture and native wildlife conservation.",
+                species: "New Zealand Falcon / Kārearea (Falco novaeseelandiae) - These powerful native raptors hunt across the open farmlands and forest edges of Manawatū."
+            },
+            gisborne: {
+                title: "Gisborne / Tairāwhiti Region", 
+                description: "The first place in the world to see the sunrise each day. Coastal forests, rivers, and marine environments support diverse wildlife.",
+                species: "Northern New Zealand Dotterel / Tūturiwhatu (Charadrius obscurus aquilonius) - These endangered shorebirds nest on Gisborne's sandy beaches and estuaries."
+            },
+            northland: {
+                title: "Northland Region",
+                description: "The northernmost region featuring subtropical forests, extensive coastlines, and the famous kauri trees. Rich marine and terrestrial biodiversity.",
+                species: "New Zealand Dotterel / Tūturiwhatu (Charadrius obscurus) - These vulnerable shorebirds breed on Northland's sandy beaches and harbor shores."
+            },
+            tasman: {
+                title: "Tasman Region",
+                description: "Home to Abel Tasman National Park and Golden Bay. Diverse landscapes from coastal areas to mountain ranges support varied wildlife.",
+                species: "Great Spotted Kiwi / Roroa (Apteryx haastii) - The largest kiwi species, found in the forested mountains of Tasman region, particularly around Kahurangi National Park."
+            },
+            marlborough: {
+                title: "Marlborough Region",
+                description: "Famous for wine production and the Marlborough Sounds. The intricate waterways and coastal environment create unique marine habitats.",
+                species: "King Shag / Kawau (Leucocarbo carunculatus) - This endemic cormorant is found only in the Marlborough Sounds, making it one of the world's rarest seabirds."
+            },
+            "west coast": {
+                title: "West Coast Region",
+                description: "Rugged coastline with dense rainforests and glacial landscapes. One of New Zealand's most pristine wilderness areas with unique flora and fauna.",
+                species: "Fiordland Crested Penguin / Tawaki (Eudyptes pachyrhynchus) - These distinctive yellow-crested penguins nest in the coastal forests and rocky shores of the West Coast."
+            }
         };
         
         // Function to show location information
@@ -275,10 +263,6 @@
             }
 
             // Apply final position
-            infoPanel.style.left = `${adjustedLeft}px`;
-            infoPanel.style.top = `${adjustedTop}px`;
-
-        // Apply final position
             infoPanel.style.left = `${adjustedLeft}px`;
             infoPanel.style.top = `${adjustedTop}px`;
         }
