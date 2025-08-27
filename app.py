@@ -270,45 +270,88 @@ def favourites():
     return render_template("favourites.html")
     
     
+# Add this updated route to your app.py file (replace the existing search_suggestions route)
+
 @app.route("/api/search-suggestions")
 def search_suggestions():
     query = request.args.get('q', '').lower().strip()
-    if len(query) < 2:  # Only search if at least 2 characters
-        return {'suggestions': []}
+    show_all = request.args.get('show_all', 'false').lower() == 'true'
     
     cursor = get_db().cursor()
     
-    # Search for matching species names and scientific names
-    cursor.execute("""
-        SELECT DISTINCT species_name, scientific_name 
-        FROM species 
-        WHERE LOWER(species_name) LIKE ? 
-           OR LOWER(scientific_name) LIKE ?
-        ORDER BY species_name
-        LIMIT 10
-    """, ['%' + query + '%', '%' + query + '%'])
-    
-    results = cursor.fetchall()
-    cursor.close()
-    
-    suggestions = []
-    for row in results:
-        # Add species name if it matches
-        if query in row[0].lower():
+    if show_all or len(query) == 0:
+        # Show all species when requested or when no query
+        cursor.execute("""
+            SELECT DISTINCT species_name, scientific_name, species_type, family
+            FROM species 
+            ORDER BY species_name
+            LIMIT 20
+        """)
+        
+        results = cursor.fetchall()
+        cursor.close()
+        
+        suggestions = []
+        for row in results:
             suggestions.append({
                 'text': row[0],
-                'type': 'Species Name'
+                'type': f'{row[2]} - {row[3]}' if row[3] else row[2]
             })
-        # Add scientific name if it matches and is different
-        if query in row[1].lower() and row[1] != row[0]:
-            suggestions.append({
-                'text': row[1],
-                'type': 'Scientific Name'
-            })
+            # Also add scientific name as a separate option
+            if row[1] and row[1] != row[0]:
+                suggestions.append({
+                    'text': row[1],
+                    'type': f'Scientific Name - {row[2]}'
+                })
+        
+        return {'suggestions': suggestions[:15]}  # Limit to 15 for better UX
     
-    return {'suggestions': suggestions[:8]}  # Limit to 8 suggestions
-
-# Add this new route to your app.py file (add it after the existing routes)
+    elif len(query) >= 1:  # Changed from 2 to 1 for more responsive searching
+        # Search for matching species names and scientific names
+        cursor.execute("""
+            SELECT DISTINCT species_name, scientific_name, species_type, family
+            FROM species 
+            WHERE LOWER(species_name) LIKE ? 
+               OR LOWER(scientific_name) LIKE ?
+               OR LOWER(species_type) LIKE ?
+               OR LOWER(family) LIKE ?
+            ORDER BY 
+                CASE 
+                    WHEN LOWER(species_name) LIKE ? THEN 1
+                    WHEN LOWER(scientific_name) LIKE ? THEN 2
+                    ELSE 3 
+                END,
+                species_name
+            LIMIT 10
+        """, ['%' + query + '%'] * 4 + [query + '%'] * 2)
+        
+        results = cursor.fetchall()
+        cursor.close()
+        
+        suggestions = []
+        for row in results:
+            # Add species name if it matches
+            if query in row[0].lower():
+                suggestions.append({
+                    'text': row[0],
+                    'type': f'{row[2]} - {row[3]}' if row[3] else row[2]
+                })
+            # Add scientific name if it matches and is different
+            if query in row[1].lower() and row[1] != row[0]:
+                suggestions.append({
+                    'text': row[1],
+                    'type': f'Scientific Name - {row[2]}'
+                })
+            # Add by type/family if they match
+            if query in row[2].lower():
+                suggestions.append({
+                    'text': row[0],
+                    'type': f'Type: {row[2]}'
+                })
+        
+        return {'suggestions': suggestions[:10]}
+    
+    return {'suggestions': []}
 
 @app.route("/api/species")
 def api_species():

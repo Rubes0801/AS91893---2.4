@@ -1322,9 +1322,9 @@ select:focus,
 }
 
 .logo-image {
-  height: 40px;
+  height: 60px;
   width: auto;
-  max-width: 100px; /* Add this constraint */
+  max-width: 150px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(127, 176, 105, 0.3);
   transition: all 0.3s ease;
@@ -1850,5 +1850,231 @@ select:focus,
     .button-text {
         font-size: 0.9rem;
         padding: 8px 16px;
+    }
+}
+
+/* Add these enhanced dropdown styles to your styles.css file */
+
+/* Enhanced Search Dropdown for Dark Theme */
+.search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-background);
+    border: 2px solid var(--accent-color);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    max-height: 400px; /* Increased from 320px for more options */
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 
+        0 8px 32px var(--shadow-color),
+        0 4px 12px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+    display: none;
+}
+
+.search-dropdown.show {
+    display: block;
+    animation: dropdownFadeIn 0.2s ease;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom scrollbar for dropdown */
+.search-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-dropdown::-webkit-scrollbar-track {
+    background: rgba(42, 49, 43, 0.3);
+    border-radius: 4px;
+}
+
+.search-dropdown::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.search-dropdown::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-bright);
+}
+
+.dropdown-loading {
+    padding: 20px;
+    color: var(--text-secondary);
+    text-align: center;
+    font-style: italic;
+    background: rgba(127, 176, 105, 0.1);
+    border-bottom: 1px solid var(--table-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.dropdown-loading::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--accent-color);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.dropdown-item {
+    padding: 15px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--table-border);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.dropdown-item::before {
+    content: '';
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(127, 176, 105, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.dropdown-item:hover,
+.dropdown-item.highlighted {
+    background: var(--glow-color);
+    transform: translateX(5px);
+    border-left: 4px solid var(--accent-color);
+    padding-left: 16px;
+}
+
+.dropdown-item:hover::before,
+.dropdown-item.highlighted::before {
+    left: 100%;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item-text {
+    font-weight: 600;
+    color: var(--text-color);
+    flex-grow: 1;
+}
+
+.dropdown-item-type {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-left: 15px;
+    padding: 4px 8px;
+    background: rgba(127, 176, 105, 0.2);
+    border-radius: 4px;
+    border: 1px solid rgba(127, 176, 105, 0.3);
+}
+
+.dropdown-item:hover .dropdown-item-type,
+.dropdown-item.highlighted .dropdown-item-type {
+    background: var(--accent-color);
+    color: var(--text-color);
+    border-color: var(--accent-bright);
+}
+
+/* Empty state for dropdown */
+.dropdown-empty {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    border-bottom: 1px solid var(--table-border);
+}
+
+/* Enhanced focus state for search input when dropdown is active */
+.search-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 
+        0 0 0 3px var(--glow-color),
+        inset 0 2px 4px rgba(74, 60, 40, 0.1);
+    background: rgba(245, 243, 240, 0.95);
+    color: #2d3e2d;
+    border-radius: 25px 0 0 0; /* Only round top-left when dropdown is open */
+}
+
+/* When dropdown is showing, adjust input border radius */
+.search-input:focus + .search-dropdown.show {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* Mobile responsiveness for dropdown */
+@media (max-width: 768px) {
+    .search-dropdown {
+        max-height: 300px;
+        font-size: 14px;
+    }
+    
+    .dropdown-item {
+        padding: 12px 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .dropdown-item-text {
+        font-size: 0.95rem;
+    }
+    
+    .dropdown-item-type {
+        font-size: 0.8rem;
+        margin-left: 0;
+        align-self: flex-end;
+    }
+    
+    .dropdown-loading {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-dropdown {
+        max-height: 250px;
+        border-radius: 0 0 8px 8px;
+    }
+    
+    .dropdown-item {
+        padding: 10px 12px;
+    }
+    
+    .dropdown-item-text {
+        font-size: 0.9rem;
+    }
+    
+    .dropdown-item-type {
+        font-size: 0.75rem;
     }
 }

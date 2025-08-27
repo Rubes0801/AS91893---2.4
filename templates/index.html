@@ -167,69 +167,315 @@
             });
         }
 
-        // Search dropdown functionality
-        let searchTimeout;
-        let currentHighlightIndex = -1;
-        
-        function setupSearchDropdown() {
-            const searchBox = document.getElementById('search-box');
-            const searchDropdown = document.getElementById('search-dropdown');
-            
-            if (!searchBox || !searchDropdown) return;
-            
-            searchBox.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                const query = this.value.trim();
-                
-                if (query.length < 2) {
-                    searchDropdown.classList.remove('show');
-                    return;
-                }
-                
-                searchTimeout = setTimeout(() => {
-                    fetch('/api/search-suggestions?q=' + encodeURIComponent(query))
-                        .then(response => response.json())
-                        .then(data => {
-                            displaySuggestions(data.suggestions);
-                        })
-                        .catch(error => {
-                            console.error('Search error:', error);
-                            searchDropdown.classList.remove('show');
-                        });
-                }, 300);
-            });
-            
-            // Handle keyboard navigation
-            searchBox.addEventListener('keydown', function(e) {
-                const items = searchDropdown.querySelectorAll('.dropdown-item');
-                
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    currentHighlightIndex = Math.min(currentHighlightIndex + 1, items.length - 1);
-                    updateHighlight(items);
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    currentHighlightIndex = Math.max(currentHighlightIndex - 1, -1);
-                    updateHighlight(items);
-                } else if (e.key === 'Enter' && currentHighlightIndex >= 0) {
-                    e.preventDefault();
-                    if (items[currentHighlightIndex]) {
-                        selectSuggestion(items[currentHighlightIndex].dataset.text);
-                    }
-                } else if (e.key === 'Escape') {
-                    searchDropdown.classList.remove('show');
-                    currentHighlightIndex = -1;
-                }
-            });
-            
-            // Hide dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!searchBox.contains(e.target) && !searchDropdown.contains(e.target)) {
-                    searchDropdown.classList.remove('show');
-                    currentHighlightIndex = -1;
-                }
-            });
+        // Updated JavaScript for index.html - replace the search dropdown functionality section
+
+// Search dropdown functionality
+let searchTimeout;
+let currentHighlightIndex = -1;
+
+function setupSearchDropdown() {
+    const searchBox = document.getElementById('search-box');
+    const searchDropdown = document.getElementById('search-dropdown');
+    
+    if (!searchBox || !searchDropdown) return;
+    
+    // Show all suggestions when input is focused (clicked)
+    searchBox.addEventListener('focus', function() {
+        const query = this.value.trim();
+        if (query.length === 0) {
+            // Show all available species when clicked with no text
+            showAllSuggestions();
+        } else if (query.length >= 1) {
+            // If there's already text, search normally
+            fetchSuggestions(query);
         }
+    });
+    
+    searchBox.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        
+        if (query.length === 0) {
+            // Show all suggestions when input is empty
+            showAllSuggestions();
+            return;
+        }
+        
+        // Debounce the search
+        searchTimeout = setTimeout(() => {
+            fetchSuggestions(query);
+        }, 200); // Reduced delay for better responsiveness
+    });
+    
+    // Handle keyboard navigation
+    searchBox.addEventListener('keydown', function(e) {
+        const items = searchDropdown.querySelectorAll('.dropdown-item');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            currentHighlightIndex = Math.min(currentHighlightIndex + 1, items.length - 1);
+            updateHighlight(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            currentHighlightIndex = Math.max(currentHighlightIndex - 1, -1);
+            updateHighlight(items);
+        } else if (e.key === 'Enter' && currentHighlightIndex >= 0) {
+            e.preventDefault();
+            if (items[currentHighlightIndex]) {
+                selectSuggestion(items[currentHighlightIndex].dataset.text);
+            }
+        } else if (e.key === 'Escape') {
+            searchDropdown.classList.remove('show');
+            currentHighlightIndex = -1;
+        }
+    });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchBox.contains(e.target) && !searchDropdown.contains(e.target)) {
+            searchDropdown.classList.remove('show');
+            currentHighlightIndex = -1;
+        }
+    });
+}
+
+function showAllSuggestions() {
+    const searchDropdown = document.getElementById('search-dropdown');
+    
+    // Show loading state
+    searchDropdown.innerHTML = '<div class="dropdown-loading">Loading all species...</div>';
+    searchDropdown.classList.add('show');
+    
+    fetch('/api/search-suggestions?show_all=true')
+        .then(response => response.json())
+        .then(data => {
+            displaySuggestions(data.suggestions);
+        })
+        .catch(error => {
+            console.error('Search error:', error);
+            searchDropdown.classList.remove('show');
+        });
+}
+
+function fetchSuggestions(query) {
+    const searchDropdown = document.getElementById('search-dropdown');
+    
+    // Show loading state
+    searchDropdown.innerHTML = '<div class="dropdown-loading">Searching...</div>';
+    searchDropdown.classList.add('show');
+    
+    fetch('/api/search-suggestions?q=' + encodeURIComponent(query))
+        .then(response => response.json())
+        .then(data => {
+            displaySuggestions(data.suggestions);
+        })
+        .catch(error => {
+            console.error('Search error:', error);
+            searchDropdown.classList.remove('show');
+        });
+}
+
+function displaySuggestions(suggestions) {
+    const searchDropdown = document.getElementById('search-dropdown');
+    
+    if (suggestions.length === 0) {
+        searchDropdown.innerHTML = '<div class="dropdown-loading">No suggestions found</div>';
+        return;
+    }
+    
+    searchDropdown.innerHTML = suggestions.map(suggestion => {
+        // Escape quotes in the text for the onclick attribute
+        const escapedText = suggestion.text.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        return `
+            <div class="dropdown-item" data-text="${suggestion.text}" onclick="selectSuggestion('${escapedText}')">
+                <span class="dropdown-item-text">${suggestion.text}</span>
+                <span class="dropdown-item-type">${suggestion.type}</span>
+            </div>
+        `;
+    }).join('');
+    
+    searchDropdown.classList.add('show');
+    currentHighlightIndex = -1;
+}
+
+function updateHighlight(items) {
+    items.forEach((item, index) => {
+        if (index === currentHighlightIndex) {
+            item.classList.add('highlighted');
+        } else {
+            item.classList.remove('highlighted');
+        }
+    });
+}
+
+function selectSuggestion(text) {
+    const searchBox = document.getElementById('search-box');
+    const searchDropdown = document.getElementById('search-dropdown');
+    
+    searchBox.value = text;
+    searchDropdown.classList.remove('show');
+    currentHighlightIndex = -1;
+    
+    // Submit the form
+    searchBox.closest('form').submit();
+}
+
+// Updated JavaScript for species.html - replace the entire script section
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchDropdown = document.getElementById('searchDropdown');
+    let currentTimeout;
+    let currentHighlight = -1;
+
+    // Show all suggestions when input is focused (clicked)
+    searchInput.addEventListener('focus', function() {
+        const query = this.value.trim();
+        if (query.length === 0) {
+            // Show all available species when clicked with no text
+            showAllSuggestions();
+        } else if (query.length >= 1) {
+            // If there's already text, search normally
+            fetchSuggestions(query);
+        }
+    });
+
+    // Function to show all suggestions
+    function showAllSuggestions() {
+        showLoading();
+        
+        fetch('/api/search-suggestions?show_all=true')
+            .then(response => response.json())
+            .then(data => {
+                showSuggestions(data.suggestions);
+            })
+            .catch(error => {
+                console.error('Error fetching all suggestions:', error);
+                hideDropdown();
+            });
+    }
+
+    // Function to fetch search suggestions
+    function fetchSuggestions(query) {
+        if (query.length < 1) {
+            showAllSuggestions();
+            return;
+        }
+
+        // Clear previous timeout
+        if (currentTimeout) {
+            clearTimeout(currentTimeout);
+        }
+
+        // Show loading
+        showLoading();
+
+        // Debounce the API call
+        currentTimeout = setTimeout(() => {
+            fetch(`/api/search-suggestions?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    showSuggestions(data.suggestions);
+                })
+                .catch(error => {
+                    console.error('Error fetching suggestions:', error);
+                    hideDropdown();
+                });
+        }, 200); // Reduced delay for better responsiveness
+    }
+
+    // Show loading state
+    function showLoading() {
+        searchDropdown.innerHTML = '<div class="dropdown-loading">Loading...</div>';
+        searchDropdown.classList.add('show');
+    }
+
+    // Show suggestions in dropdown
+    function showSuggestions(suggestions) {
+        if (suggestions.length === 0) {
+            searchDropdown.innerHTML = '<div class="dropdown-loading">No suggestions found</div>';
+            return;
+        }
+
+        const html = suggestions.map((suggestion, index) => `
+            <div class="dropdown-item" data-index="${index}" data-text="${suggestion.text}">
+                <div class="dropdown-item-text">${suggestion.text}</div>
+                <div class="dropdown-item-type">${suggestion.type}</div>
+            </div>
+        `).join('');
+
+        searchDropdown.innerHTML = html;
+        searchDropdown.classList.add('show');
+        currentHighlight = -1;
+
+        searchDropdown.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', function() {
+                selectSuggestion(this.dataset.text);
+            });
+        });
+    }
+
+    // Hide dropdown
+    function hideDropdown() {
+        searchDropdown.classList.remove('show');
+        currentHighlight = -1;
+    }
+
+    // Select a suggestion
+    function selectSuggestion(text) {
+        searchInput.value = text;
+        hideDropdown();
+        searchInput.form.submit();
+    }
+
+    // Handle keyboard navigation
+    function handleKeyNavigation(e) {
+        const items = searchDropdown.querySelectorAll('.dropdown-item');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            currentHighlight = Math.min(currentHighlight + 1, items.length - 1);
+            updateHighlight(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            currentHighlight = Math.max(currentHighlight - 1, -1);
+            updateHighlight(items);
+        } else if (e.key === 'Enter') {
+            if (currentHighlight >= 0 && items[currentHighlight]) {
+                e.preventDefault();
+                selectSuggestion(items[currentHighlight].dataset.text);
+            }
+        } else if (e.key === 'Escape') {
+            hideDropdown();
+        }
+    }
+
+    // Update visual highlight
+    function updateHighlight(items) {
+        items.forEach((item, index) => {
+            item.classList.toggle('highlighted', index === currentHighlight);
+        });
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        if (query.length === 0) {
+            showAllSuggestions();
+        } else {
+            fetchSuggestions(query);
+        }
+    });
+
+    searchInput.addEventListener('keydown', handleKeyNavigation);
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+            hideDropdown();
+        }
+    });
+});
         
         function displaySuggestions(suggestions) {
             const searchDropdown = document.getElementById('search-dropdown');
