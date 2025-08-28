@@ -181,15 +181,22 @@ function setupSearchDropdown() {
     
     // Show all suggestions when input is focused (clicked)
     searchBox.addEventListener('focus', function() {
-        const query = this.value.trim();
-        if (query.length === 0) {
-            // Show all available species when clicked with no text
-            showAllSuggestions();
-        } else if (query.length >= 1) {
-            // If there's already text, search normally
-            fetchSuggestions(query);
-        }
-    });
+    // Always show suggestions when clicking on the search bar
+    const query = this.value.trim();
+    if (query.length === 0) {
+        showAllSuggestions();
+    } else {
+        fetchSuggestions(query);
+    }
+});
+
+// Add click event to ensure dropdown shows even if focus doesn't trigger
+searchBox.addEventListener('click', function() {
+    const query = this.value.trim();
+    if (query.length === 0) {
+        showAllSuggestions();
+    }
+});
     
     searchBox.addEventListener('input', function() {
         clearTimeout(searchTimeout);
@@ -230,13 +237,6 @@ function setupSearchDropdown() {
         }
     });
     
-    // Hide dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!searchBox.contains(e.target) && !searchDropdown.contains(e.target)) {
-            searchDropdown.classList.remove('show');
-            currentHighlightIndex = -1;
-        }
-    });
 }
 
 function showAllSuggestions() {

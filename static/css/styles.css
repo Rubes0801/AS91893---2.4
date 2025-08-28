@@ -51,6 +51,8 @@ body {
   margin: 0 auto;
   padding: 100px 20px 40px 20px; /* Top padding for fixed header */
   min-height: calc(100vh - 100px);
+  position: relative;
+  z-index: 1;
 }
 
 .top-header {
@@ -141,6 +143,8 @@ form, .field-selector {
   border: 1px solid var(--accent-color);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 100;
 }
 
 form:hover, .field-selector:hover {
@@ -155,11 +159,15 @@ form:hover, .field-selector:hover {
   display: flex;
   margin-bottom: 20px;
   position: relative;
+  z-index: 1001; 
+  border: 2px solid var(--accent-color);
+  border-radius: 25px; 
+  overflow: hidden; 
+  width: 100%;
 }
 
 .search-input {
   flex: 1;
-  width: 100%;
   min-width: 0; /* Allows flex item to shrink below its content size */
   padding: 15px 20px;
   border: 2px solid var(--accent-color);
@@ -169,6 +177,7 @@ form:hover, .field-selector:hover {
   color: var(--text-color);
   transition: all 0.3s ease;
   outline: none;
+  border-right: none;
 }
 
 .search-input::placeholder {
@@ -197,6 +206,8 @@ button {
   background: var(--gradient-earth);
   color: #f5f3f0;
   border: none;
+  border: 2px solid var(--accent-color);
+  border-left: none;
   padding: 15px 30px;
   border-radius: 0 25px 25px 0;
   cursor: pointer;
@@ -365,6 +376,7 @@ img:hover:not(.nz-map) {
   margin-bottom: 30px;
   width: 100%;
   overflow: visible;
+   z-index: 1;
 }
 
 .species-card {
@@ -379,6 +391,7 @@ img:hover:not(.nz-map) {
   border: 1px solid var(--accent-color);
   position: relative;
   backdrop-filter: blur(10px);
+  z-index: 1;
 }
 
 .species-card::before {
@@ -549,19 +562,19 @@ a:hover::after {
   border: 2px solid #bee5eb;
 }
 
-/* Enhanced Search Dropdown for Dark Theme */
 .search-dropdown {
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
+  left: 0px; /* Account for container border */
+  right: 0px;
+  width: 100%; /* Use width instead of right */
   background: var(--card-background);
   border: 2px solid var(--accent-color);
   border-top: none;
   border-radius: 0 0 12px 12px;
-  max-height: 320px;
+  max-height: 400px;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 9999;
   box-shadow: 
     0 8px 32px var(--shadow-color),
     0 4px 12px rgba(0,0,0,0.3);
@@ -611,6 +624,7 @@ a:hover::after {
 .search-wrapper {
   position: relative;
   flex: 1;
+  z-index: 1001;
 }
 
 /* Back link styling */
