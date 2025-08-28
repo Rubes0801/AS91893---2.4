@@ -417,14 +417,22 @@ img:hover:not(.nz-map) {
 }
 
 .species-card-image {
-  width: 100%;
-  height: 400px; /* Increased from 280px for much larger images */
-  object-fit: contain; /* Changed from 'cover' to 'contain' to show full image */
-  background: var(--gradient-earth);
-  padding: 15px; /* Added padding to give images breathing room */
-  transition: all 0.4s ease;
-  position: relative;
-  border-bottom: 3px solid var(--earth-brown);
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: #4a3c28;
+}
+
+.placeholder-fallback {
+    width: 100%;
+    height: 200px;
+    background-color: #4a3c28;
+    color: #f5f3f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: bold;
 }
 
 .species-card:hover .species-card-image {
