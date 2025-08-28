@@ -161,7 +161,7 @@ form:hover, .field-selector:hover {
   position: relative;
   z-index: 1001; 
   border-radius: 25px; 
-  overflow: hidden; 
+  overflow: visible; 
   width: 100%;
 }
 

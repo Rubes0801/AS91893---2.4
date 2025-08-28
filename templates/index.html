@@ -160,7 +160,7 @@
             });
         }
 
-        // Search dropdown functionality - FIXED VERSION
+        // Enhanced search dropdown functionality with "All Species Data" option
         let searchTimeout;
         let currentHighlightIndex = -1;
 
@@ -220,7 +220,13 @@
                 } else if (e.key === 'Enter' && currentHighlightIndex >= 0) {
                     e.preventDefault();
                     if (items[currentHighlightIndex]) {
-                        selectSuggestion(items[currentHighlightIndex].dataset.text);
+                        const itemText = items[currentHighlightIndex].dataset.text;
+                        const itemAction = items[currentHighlightIndex].dataset.action;
+                        if (itemAction === 'all-species') {
+                            showAllSpeciesData();
+                        } else {
+                            selectSuggestion(itemText);
+                        }
                     }
                 } else if (e.key === 'Escape') {
                     hideDropdown();
@@ -258,11 +264,11 @@
                 })
                 .then(data => {
                     console.log('Received data:', data);
-                    displaySuggestions(data.suggestions || []);
+                    displaySuggestionsWithAllSpecies(data.suggestions || []);
                 })
                 .catch(error => {
                     console.error('Search error:', error);
-                    searchDropdown.innerHTML = '<div class="dropdown-loading">Error loading suggestions</div>';
+                    displaySuggestionsWithAllSpecies([]);
                 });
         }
 
@@ -283,33 +289,43 @@
                 })
                 .then(data => {
                     console.log('Received search data:', data);
-                    displaySuggestions(data.suggestions || []);
+                    displaySuggestionsWithAllSpecies(data.suggestions || [], query);
                 })
                 .catch(error => {
                     console.error('Search error:', error);
-                    searchDropdown.innerHTML = '<div class="dropdown-loading">Error searching</div>';
+                    displaySuggestionsWithAllSpecies([], query);
                 });
         }
 
-        function displaySuggestions(suggestions) {
-            console.log('Displaying suggestions:', suggestions);
+        function displaySuggestionsWithAllSpecies(suggestions, query = '') {
+            console.log('Displaying suggestions with All Species Data option:', suggestions);
             const searchDropdown = document.getElementById('search-dropdown');
             
-            if (!suggestions || suggestions.length === 0) {
-                searchDropdown.innerHTML = '<div class="dropdown-loading">No suggestions found</div>';
-                return;
+            let html = '';
+            
+            // Always add "All Species Data" option at the top
+            html += `
+                <div class="dropdown-item all-species-item" data-action="all-species" onclick="showAllSpeciesData()">
+                    <span class="dropdown-item-text">All Species Data</span>
+                    <span class="dropdown-item-type">View Complete Database</span>
+                </div>
+            `;
+            
+            if (suggestions && suggestions.length > 0) {
+                html += suggestions.map(suggestion => {
+                    const escapedText = suggestion.text.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                    return `
+                        <div class="dropdown-item" data-text="${suggestion.text}" onclick="selectSuggestion('${escapedText}')">
+                            <span class="dropdown-item-text">${suggestion.text}</span>
+                            <span class="dropdown-item-type">${suggestion.type}</span>
+                        </div>
+                    `;
+                }).join('');
+            } else if (query) {
+                html += '<div class="dropdown-loading">No matching species found</div>';
             }
             
-            searchDropdown.innerHTML = suggestions.map(suggestion => {
-                const escapedText = suggestion.text.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-                return `
-                    <div class="dropdown-item" data-text="${suggestion.text}" onclick="selectSuggestion('${escapedText}')">
-                        <span class="dropdown-item-text">${suggestion.text}</span>
-                        <span class="dropdown-item-type">${suggestion.type}</span>
-                    </div>
-                `;
-            }).join('');
-            
+            searchDropdown.innerHTML = html;
             searchDropdown.classList.add('show');
             currentHighlightIndex = -1;
         }
@@ -332,6 +348,18 @@
             hideDropdown();
             
             searchBox.closest('form').submit();
+        }
+
+        function showAllSpeciesData() {
+            console.log('Selected: All Species Data');
+            const searchBox = document.getElementById('search-box');
+            
+            // Clear the search box and redirect to the main page showing all species
+            searchBox.value = '';
+            hideDropdown();
+            
+            // Navigate to the main page or reload current page to show all species
+            window.location.href = '/';
         }
 
         function hideDropdown() {
